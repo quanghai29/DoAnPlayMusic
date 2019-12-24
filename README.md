@@ -1,10 +1,14 @@
 # DoAnPlayMusic
+link github: https://github.com/quanghai29/DoAnPlayMusic.git
 
 Tổng quan giao diên, vùng làm việc :
 + Thanh trên cùng là các button chức năng
 + Vùng màu trắng hiển thị danh sách bài hát nút xóa , thêm bài hát
 + Vùng màu tím để hiển thị tên các play list mà người dùng đã lưu
 + Vùng màu đỏ để hiển thị thanh chơi nhạc , play pause,... 
+
+Design partern sử dụng trong đồ án:Facade  
+Tham khảo link: https://javadesign-patterns.blogspot.com/p/facade-design-pattern.html 
 
 Phân chia công việc:
 -  Duy: 
