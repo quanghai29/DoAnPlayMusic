@@ -25,10 +25,12 @@
                          Background="#f7f7f7" Padding="12,1" BorderThickness="0"/>
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="Open PlayList"
                          Background="#f7f7f7" Padding="12,1" BorderThickness="0"/>
-                <Button  Cursor="Hand"  Width="auto" Height="25" Content="Play all sing"
+                <Button  Cursor="Hand"  Width="auto" Height="25" Content="Play all"
                          Background="#f7f7f7" Padding="12,1" BorderThickness="0"/>
             </StackPanel>
         </Grid>
+        
+        <!--view danh sách các bài hát trong list hoặc do người dùng chọn--> 
         <ListBox Name="operationListBox" Grid.Row="1" Grid.Column="0" Margin="0,0,0,-3" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -62,9 +64,12 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        
+        <!--view để danh sách các playlist khi chương trình load lên-->
         <Grid Grid.Row="1" Grid.Column="1" Background="BlueViolet">
             
         </Grid>
+        <!--view chạy âm lượng play pause-->
         <Grid Grid.Row="2" Grid.ColumnSpan="2" Background="Brown">
             <TextBlock>Thanh chạy âm lượng</TextBlock>
         </Grid>
