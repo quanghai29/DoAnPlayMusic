@@ -30,7 +30,44 @@ namespace _1712384_1712349_1712407
         }
         Player player;
         BindingList<songs> ListSongs = new BindingList<songs>();
+        BindingList<mylist> MyLists = new BindingList<mylist>();
         private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+           
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            Title= player.showTitle();
+        }
+
+        private void NewPlaylistButton_Click(object sender, RoutedEventArgs e)
+        {
+            // lấy input chỉ bằng một nốt nhạc
+            string listName = inputDiaLog("input", true);
+            if(listName!=null)
+            {
+                var list = new mylist()
+                {
+                    namelist = listName
+                };
+                MyLists.Add(list);
+                listFavouriteSong.ItemsSource = MyLists;
+            }
+        }
+
+        //Hàm hỗ trợ gọi hộp thoại input
+        private string inputDiaLog(string inputBoolen, bool animation)
+        {
+            var screen = new NottifyDiaglog(inputBoolen, animation);
+            if (screen.ShowDialog() == true)
+            {
+                return screen.strInput;
+            }
+            return null;
+        }
+
+        private void OpenSongButton_Click(object sender, RoutedEventArgs e)
         {
             var screen = new Microsoft.Win32.OpenFileDialog();
             if (screen.ShowDialog() == true)
@@ -51,17 +88,13 @@ namespace _1712384_1712349_1712407
                 };
 
                 ListSongs.Add(song);
+                operationListBox.ItemsSource = null;
                 operationListBox.ItemsSource = ListSongs;
 
                 //Tính thời gian
                 player.timer.Tick += timer_Tick;
-               
-            }
-        }
 
-        private void timer_Tick(object sender, EventArgs e)
-        {
-            Title= player.showTitle();
+            }
         }
     }
 }

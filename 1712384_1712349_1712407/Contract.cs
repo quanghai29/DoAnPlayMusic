@@ -64,4 +64,9 @@ namespace _1712384_1712349_1712407
 
         public string duration { get; set; }
     }
+
+    public class mylist
+    {
+        public string namelist { get; set; }
+    }
 }
