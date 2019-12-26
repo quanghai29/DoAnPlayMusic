@@ -30,13 +30,13 @@ namespace _1712384_1712349_1712407
 
         public string showTitle()
         {
+            var Title = "";
             var filename = pathfile.Name;
             var shortname = System.IO.Path.GetFileNameWithoutExtension(filename);
 
             var currentPos = sound.Position.ToString(@"mm\:ss");
-            var duration = sound.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
-            
-            var Title = String.Format($"{currentPos} / {duration} - {shortname}");
+            var duration = showDuration();
+            Title = String.Format($"{currentPos} / {duration} - {shortname}");
             return Title;
         }
 

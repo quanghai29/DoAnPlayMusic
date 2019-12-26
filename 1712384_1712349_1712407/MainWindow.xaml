@@ -51,23 +51,24 @@
                          FontWeight="Bold" FontStyle="Oblique" />
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="Delete"
                          Background="#292426" Padding="12,1" Margin="2,25,15,0" Foreground="White" 
-                         FontWeight="Bold" FontStyle="Oblique" />
+                         FontWeight="Bold" FontStyle="Oblique" Click="ButtonDelete_Click" />
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="Play All"
                          Background="#292426" Padding="12,1" Margin="2,25,15,0" Foreground="White" 
                          FontWeight="Bold" FontStyle="Oblique" />
             </StackPanel>
             
             <!--List các bài hát-->
-            <ListBox Name="operationListBox" Height="400" Grid.Row="1" Margin="0,1,0,2" BorderThickness="0,2,2,0" BorderBrush="Black">
+            <ListBox Name="operationListBox" Height="400" Grid.Row="1" Margin="0,1,0,2" BorderThickness="0,2,2,0" BorderBrush="Black" SelectionMode="Multiple">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
                             <StackPanel.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Name="editOperationItem" Header="Edit" />
-                                    <MenuItem Name="deleteOperationItem" Header="Delete" />
+                                    <MenuItem Name="deleteOperationItem" Header="Delete" Click="deleteOperationItem_Click"/>
                                 </ContextMenu>
                             </StackPanel.ContextMenu>
+                            
                             <Border BorderBrush="Black" BorderThickness="0,0,0,2" Width="800" Height="60">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -75,11 +76,7 @@
                                         <ColumnDefinition Width="8*"/>
                                         <ColumnDefinition Width="4*"/>
                                     </Grid.ColumnDefinitions>
-
-                                    <CheckBox Margin="30,15,0,0">
-
-                                    </CheckBox>
-                                    <StackPanel Grid.Column="1" Margin="0,0,0,0">
+                                    <StackPanel Name="ItemSong" Grid.Column="1" Margin="0,0,0,0" Orientation="Horizontal" >
                                         <TextBlock Text="{Binding pathfile.Name}" FontSize="18" Margin="0,9,5,5" />
                                         <TextBlock Text="{Binding singer}" FontSize="12" FontWeight="Thin" TextWrapping="Wrap"/>
                                     </StackPanel>

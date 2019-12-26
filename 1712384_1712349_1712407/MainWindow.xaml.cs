@@ -97,5 +97,32 @@ namespace _1712384_1712349_1712407
 
             }
         }
+
+        private void deleteOperationItem_Click(object sender, RoutedEventArgs e)
+        {
+            deleteSongs();
+        }
+
+        private void deleteSongs()
+        {
+            if (operationListBox.SelectedIndex == -1)
+            {
+                return;
+            }
+
+            //_fullPaths.RemoveAt(playlistListBox.SelectedIndex);
+            while (operationListBox.SelectedItems.Count > 0)
+            {
+                var index = operationListBox.Items.IndexOf(operationListBox.SelectedItem);
+                ListSongs.RemoveAt(index);
+            }
+        }
+
+
+        private void ButtonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            deleteSongs();
+        }
+
     }
 }
