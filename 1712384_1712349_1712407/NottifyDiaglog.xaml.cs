@@ -68,7 +68,8 @@ namespace _1712384_1712349_1712407
             
             //animation.AutoReverse = true;
             //animation.RepeatBehavior = new RepeatBehavior(2);
-
+            
+            
             
             Storyboard story = new Storyboard();
             story.Children.Add(animation);

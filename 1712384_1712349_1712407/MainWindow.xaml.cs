@@ -90,7 +90,8 @@ namespace _1712384_1712349_1712407
                 ListSongs.Add(song);
                 operationListBox.ItemsSource = null;
                 operationListBox.ItemsSource = ListSongs;
-
+                StaticDiskBorder.Visibility = Visibility.Collapsed;
+                RotateDiskBorder.Visibility = Visibility.Visible;
                 //Tính thời gian
                 player.timer.Tick += timer_Tick;
 

@@ -16,7 +16,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.5*" />
-            <RowDefinition Height="9*" />
+            <RowDefinition Height="9.0*" />
             <RowDefinition Height="1.5*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -40,7 +40,8 @@
         <Grid Grid.Row="1" Grid.Column="0" Background="White">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.5*"/>
-                <RowDefinition Height="4*"/>
+                <RowDefinition Height="3.5*"/>
+                <RowDefinition Height="1.5*"/>
             </Grid.RowDefinitions>
             
             <!--CÁC CHỨC NĂNG CỦA VIEW LIST BÀI HÁT-->
@@ -57,7 +58,7 @@
             </StackPanel>
             
             <!--List các bài hát-->
-            <ListBox Name="operationListBox" Grid.Row="1" Margin="0,1,0,2" BorderThickness="0,2,2,2" BorderBrush="Black">
+            <ListBox Name="operationListBox" Height="400" Grid.Row="1" Margin="0,1,0,2" BorderThickness="0,2,2,0" BorderBrush="Black">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
@@ -88,17 +89,9 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-
-        </Grid>
-       
-
-
-        <!--view để danh sách các playlist khi chương trình load lên-->
-        <Grid Grid.Row="1" Grid.Column="1" Background="White" Margin="0,0,0,5">
-           
-            <StackPanel>
-                <Label Content="Your Favorite List" Width="auto" FontWeight="DemiBold" FontSize="23" FontStretch="Expanded" FontStyle="Italic" Foreground="LawnGreen"/>
-                <ListBox Name="listFavouriteSong" Margin="0,1,0,2" BorderThickness="0,2,2,2" BorderBrush="Black" Height="550">
+            <StackPanel Grid.Row="2">
+                <Label Content="Your Favorite List" Width="auto" FontWeight="DemiBold" FontSize="18" FontStretch="Expanded" FontStyle="Italic" Foreground="PaleVioletRed"/>
+                <ListBox Name="listFavouriteSong" Margin="0,1,0,0" BorderThickness="0,2,2,0" BorderBrush="Black" Height="150">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
@@ -119,8 +112,46 @@
                 </ListBox>
             </StackPanel>
         </Grid>
+       
+
+
+        <!--view để danh sách các playlist khi chương trình load lên-->
+        <Grid Grid.Row="1" Grid.Column="1" Background="White" Margin="0,0,0,5">
+
+            <Border x:Name="RotateDiskBorder"  CornerRadius="300" Width="450" Height="450" Visibility="Collapsed"
+                    BorderThickness="2" BorderBrush="Black" RenderTransformOrigin="0.50,0.50">
+                <Border.Background>
+                    <ImageBrush Stretch="UniformToFill" ImageSource="Images/background_music.jpg"/>
+                </Border.Background>
+                <Border.RenderTransform>
+                    <RotateTransform x:Name="AnimatedRotateTransform" Angle="0" />
+                </Border.RenderTransform>
+                <Border.Triggers>
+                    <EventTrigger RoutedEvent="Border.Loaded" SourceName="RotateDiskBorder">
+                        <BeginStoryboard x:Name="DiskRotateStory">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="AnimatedRotateTransform" 
+                            Storyboard.TargetProperty="Angle"                        
+                            By="1"        
+                            To="360" 
+                            Duration="0:0:2" 
+                            FillBehavior="Stop" 
+                            RepeatBehavior="Forever" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Border.Triggers>
+            </Border>
+            <Border x:Name="StaticDiskBorder"  CornerRadius="300" Width="450" Height="450" Visibility="Visible"
+                    BorderThickness="2" BorderBrush="Black" RenderTransformOrigin="0.50,0.50">
+                <Border.Background>
+                    <ImageBrush Stretch="UniformToFill" ImageSource="Images/background_music.jpg"/>
+                </Border.Background>
+            </Border>
+            
+        </Grid>
         <!--view chạy âm lượng play pause-->
-        <Grid Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5,0,0">
+        <Grid Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10,0,0">
             <TextBlock>Thanh chạy âm lượng</TextBlock>
         </Grid>
     </Grid>
