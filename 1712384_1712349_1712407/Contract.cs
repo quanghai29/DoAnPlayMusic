@@ -14,6 +14,12 @@ namespace _1712384_1712349_1712407
         public MediaPlayer sound { get; set; }
         public FileInfo pathfile { get; set; }
         public DispatcherTimer timer { get; set;}
+
+        public void DeletePlayer()
+        {
+            sound.Stop();
+            timer = null;
+        }
         public void init()
         {
             sound = new MediaPlayer();
@@ -63,7 +69,8 @@ namespace _1712384_1712349_1712407
         public string singer { get; set; }
 
         public string duration { get; set; }
-        public int lastIndex { get; set; }
+        public int Index { get; set; }
+        public bool isPlaying { get; set; }
     }
 
     public class mylist

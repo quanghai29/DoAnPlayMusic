@@ -15,6 +15,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.ComponentModel;
+using Microsoft.Build.Tasks;
+
 namespace _1712384_1712349_1712407
 {
     /// <summary>
@@ -80,7 +82,7 @@ namespace _1712384_1712349_1712407
                 {
                     pathfile = info,
                     //duration = player.showDuration(),
-                    //lastIndex = _lastIndex
+                    //Index = _lastIndex
                 };
 
                 ListSongs.Add(song);
@@ -117,6 +119,8 @@ namespace _1712384_1712349_1712407
             deleteSongs();
         }
 
+        bool _isPlaying = false;
+
         /// <summary>
         /// Sau khi chọn 1 bài hát trong list để nghe->nhấn Play button
         /// </summary>
@@ -124,6 +128,12 @@ namespace _1712384_1712349_1712407
         /// <param name="e"></param>
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
+            if(_isPlaying)
+            {
+                player.sound.Stop();
+                player.timer=null;
+                player = null;
+            }
             int indexSong = operationListBox.SelectedIndex;
             if (indexSong>=0)
             {
@@ -141,11 +151,12 @@ namespace _1712384_1712349_1712407
         /// <param name="indexSong">index của bài hát trong list</param>
         private void PlaySelectedIndex(int indexSong)
         {
+            _isPlaying = true;
             var filename = ListSongs[indexSong].pathfile;
             //Tạo một lượt chơi nhạc
             player = new Player()
             {
-                pathfile = filename,
+                pathfile = filename
             };
             player.init();
             player.listening();
