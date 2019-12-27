@@ -63,6 +63,7 @@ namespace _1712384_1712349_1712407
         public string singer { get; set; }
 
         public string duration { get; set; }
+        public int lastIndex { get; set; }
     }
 
     public class mylist

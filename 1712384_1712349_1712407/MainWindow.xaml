@@ -52,6 +52,9 @@
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="Delete"
                          Background="#292426" Padding="12,1" Margin="2,25,15,0" Foreground="White" 
                          FontWeight="Bold" FontStyle="Oblique" Click="ButtonDelete_Click" />
+                <Button  Cursor="Hand"  Width="auto" Height="25" Content="Play" Click="PlayButton_Click"
+                         Background="#292426" Padding="12,1" Margin="2,25,15,0" Foreground="White" 
+                         FontWeight="Bold" FontStyle="Oblique" />
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="Play All"
                          Background="#292426" Padding="12,1" Margin="2,25,15,0" Foreground="White" 
                          FontWeight="Bold" FontStyle="Oblique" />

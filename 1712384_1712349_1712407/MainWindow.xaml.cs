@@ -31,6 +31,7 @@ namespace _1712384_1712349_1712407
         Player player;
         BindingList<songs> ListSongs = new BindingList<songs>();
         BindingList<mylist> MyLists = new BindingList<mylist>();
+        int _lastIndex = -1;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
            
@@ -72,19 +73,14 @@ namespace _1712384_1712349_1712407
             var screen = new Microsoft.Win32.OpenFileDialog();
             if (screen.ShowDialog() == true)
             {
+                _lastIndex += 1;
                 var info = new FileInfo(screen.FileName);
-                //Tạo một lượt chơi nhạc
-                player = new Player()
-                {
-                    pathfile = info
-                };
-                player.init();
-                player.listening();
                 //Thêm bài hát vào danh sách trên màn hình hiện tại
                 var song = new songs()
                 {
                     pathfile = info,
-                    duration = player.showDuration()
+                    //duration = player.showDuration(),
+                    //lastIndex = _lastIndex
                 };
 
                 ListSongs.Add(song);
@@ -92,9 +88,6 @@ namespace _1712384_1712349_1712407
                 operationListBox.ItemsSource = ListSongs;
                 StaticDiskBorder.Visibility = Visibility.Collapsed;
                 RotateDiskBorder.Visibility = Visibility.Visible;
-                //Tính thời gian
-                player.timer.Tick += timer_Tick;
-
             }
         }
 
@@ -124,5 +117,40 @@ namespace _1712384_1712349_1712407
             deleteSongs();
         }
 
+        /// <summary>
+        /// Sau khi chọn 1 bài hát trong list để nghe->nhấn Play button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            int indexSong = operationListBox.SelectedIndex;
+            if (indexSong>=0)
+            {
+                PlaySelectedIndex(indexSong);
+            }
+            else
+            {
+                MessageBox.Show("No file selected!");
+            }
+        }
+
+        /// <summary>
+        /// Thực hiện play bài hát được chọn trong list 
+        /// </summary>
+        /// <param name="indexSong">index của bài hát trong list</param>
+        private void PlaySelectedIndex(int indexSong)
+        {
+            var filename = ListSongs[indexSong].pathfile;
+            //Tạo một lượt chơi nhạc
+            player = new Player()
+            {
+                pathfile = filename,
+            };
+            player.init();
+            player.listening();
+            //Tính thời gian
+            player.timer.Tick += timer_Tick;
+        }
     }
 }
