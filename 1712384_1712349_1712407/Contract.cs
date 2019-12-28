@@ -53,6 +53,13 @@ namespace _1712384_1712349_1712407
             string duration= sound.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
             return duration;
         }
+
+        public bool isEnded()
+        {
+            if (sound.Position == sound.NaturalDuration)
+                return true;
+            return false;
+        }
     }
 
     public class SoundSystem
@@ -76,5 +83,6 @@ namespace _1712384_1712349_1712407
     public class mylist
     {
         public string namelist { get; set; }
+        public List<songs> songsList { get; set; }
     }
 }

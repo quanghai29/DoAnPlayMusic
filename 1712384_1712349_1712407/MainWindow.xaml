@@ -27,7 +27,7 @@
             <StackPanel Orientation="Horizontal" Background="#f7f7f7">
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="New PlayList"
                          Name="newPlaylistButton" Click="NewPlaylistButton_Click" Background="#f7f7f7" Padding="12,1" BorderThickness="0"/>
-                <Button  Cursor="Hand"  Width="auto" Height="25" Content="Open PlayList"
+                <Button  Cursor="Hand"  Width="auto" Height="25" Content="Open PlayList" Click="PlayListButton_Click"
                          Background="#f7f7f7" Padding="12,1" BorderThickness="0"/>
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="Open Song" Name="openSongButton"
                          Background="#f7f7f7" Padding="12,1" BorderThickness="0" Click="OpenSongButton_Click"/>

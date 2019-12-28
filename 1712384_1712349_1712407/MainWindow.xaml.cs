@@ -36,7 +36,7 @@ namespace _1712384_1712349_1712407
         int _lastIndex = -1;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-           
+           //Nạp MyLists 
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -109,6 +109,11 @@ namespace _1712384_1712349_1712407
             while (operationListBox.SelectedItems.Count > 0)
             {
                 var index = operationListBox.Items.IndexOf(operationListBox.SelectedItem);
+                if (ListSongs[index].isPlaying == true)//xóa một bài nhạc đang chơi
+                {
+                    player.DeletePlayer();
+                    _isPlaying = false;//cập nhật lại trạng thái chơi nhạc
+                }
                 ListSongs.RemoveAt(index);
             }
         }
@@ -119,7 +124,7 @@ namespace _1712384_1712349_1712407
             deleteSongs();
         }
 
-        bool _isPlaying = false;
+        bool _isPlaying = false;//Trạng thái chơi nhạc(có đang chơi hay không)
 
         /// <summary>
         /// Sau khi chọn 1 bài hát trong list để nghe->nhấn Play button
@@ -130,14 +135,19 @@ namespace _1712384_1712349_1712407
         {
             if(_isPlaying)
             {
-                player.sound.Stop();
-                player.timer=null;
+                player.DeletePlayer();
                 player = null;
             }
             int indexSong = operationListBox.SelectedIndex;
             if (indexSong>=0)
             {
+                ListSongs[indexSong].isPlaying = true;
                 PlaySelectedIndex(indexSong);
+                if (player.isEnded())//đã chơi hết bài nhạc
+                {
+                    _isPlaying = false;
+                    ListSongs[indexSong].isPlaying = false;
+                }
             }
             else
             {
@@ -162,6 +172,16 @@ namespace _1712384_1712349_1712407
             player.listening();
             //Tính thời gian
             player.timer.Tick += timer_Tick;
+        }
+
+
+        private void PlayListButton_Click(object sender, RoutedEventArgs e)
+        {
+            var screen = new PlayListDialog();
+            if(screen.ShowDialog()==true)
+            {
+                MessageBox.Show("xin chao");
+            }
         }
     }
 }
