@@ -9,10 +9,17 @@
         ResizeMode="NoResize">
     <Canvas>
         <ListView Name="playListListView" Width="400" Height="380">
-            
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding namelist}"/>
+                        <TextBlock Text="{Binding countOfList}" HorizontalAlignment="Right" Margin="290,0,0,0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
-        <Button Name="okButton" Content="OK" Width="80" Height="25" Canvas.Left="150" Canvas.Top="400" Click="okButton_Click">
-            
-        </Button>
+        <Button Name="okButton" Content="To play" Width="80" Height="25" Canvas.Left="291" Canvas.Top="400" Click="okButton_Click" RenderTransformOrigin="0.437,0.545"/>
+
+        <Button Name="Delete" Content="Delete" Width="80" Height="25" Canvas.Left="10" Canvas.Top="400" Click="Delete_Click"/>
     </Canvas>
 </Window>

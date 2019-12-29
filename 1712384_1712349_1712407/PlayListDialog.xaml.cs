@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,15 +20,41 @@ namespace _1712384_1712349_1712407
     /// </summary>
     public partial class PlayListDialog : Window
     {
-        public PlayListDialog()
+        public string ListNameSelected = "";
+        private BindingList<mylist> copy_myLists = new BindingList<mylist>();
+        public PlayListDialog(BindingList<mylist> myLists)
         {
             InitializeComponent();
+            copy_myLists = myLists;
+            playListListView.ItemsSource = copy_myLists;
         }
 
         private void okButton_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = true;
-            this.Close();
+            var index = playListListView.SelectedIndex;
+            if(index>-1)
+            {
+                ListNameSelected = copy_myLists[index].namelist;
+                this.DialogResult = true;
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Please choose a list to play!");
+            }
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            var index = playListListView.SelectedIndex;
+            if(index>-1)
+            {
+                copy_myLists.RemoveAt(index);
+            }
+            else
+            {
+                MessageBox.Show("Nothing to delete");
+            }
         }
     }
 }

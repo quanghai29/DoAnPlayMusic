@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         WindowState="Maximized"
         Title="MainWindow" Height="450" Width="800"
-    Loaded="Window_Loaded">
+    Loaded="Window_Loaded" Closing="Window_Closing" ContentRendered="Window_ContentRendered">
     <Window.Background>
         <ImageBrush ImageSource="Images/background_music.jpg" Stretch="UniformToFill" Opacity="0.4">
         </ImageBrush>
@@ -31,7 +31,7 @@
                          Background="#f7f7f7" Padding="12,1" BorderThickness="0"/>
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="Open Song" Name="openSongButton"
                          Background="#f7f7f7" Padding="12,1" BorderThickness="0" Click="OpenSongButton_Click"/>
-                <Button  Cursor="Hand"  Width="auto" Height="25" Content="Play all"
+                <Button  Cursor="Hand"  Width="auto" Height="25" Content="Play all" Click="Button_Click"
                          Background="#f7f7f7" Padding="12,1" BorderThickness="0"/>
             </StackPanel>
         </Grid>

@@ -31,12 +31,19 @@ namespace _1712384_1712349_1712407
             
         }
         Player player;
-        BindingList<songs> ListSongs = new BindingList<songs>();
-        BindingList<mylist> MyLists = new BindingList<mylist>();
-        int _lastIndex = -1;
+        BindingList<songs> MiniLists = new BindingList<songs>();//Thể hiện các bài hát trong 1 list
+        BindingList<mylist> MyLists = new BindingList<mylist>();//chứa các list
+        BindingList<songs> BigestList = new BindingList<songs>();//chứa toàn bộ bài hát
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-           //Nạp MyLists 
+            //Nạp MyLists 
+            var filename = "SuperList.txt";
+            if (File.Exists(Directory.GetCurrentDirectory() + $"\\{filename}"))
+            {
+                loadAllSongs(filename, BigestList);
+                operationListBox.ItemsSource = BigestList;
+               
+            }
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -52,7 +59,9 @@ namespace _1712384_1712349_1712407
             {
                 var list = new mylist()
                 {
-                    namelist = listName
+                    namelist = listName,
+                    countOfList = 0
+                    //songsList =MiniLists.ToList()//để tạm
                 };
                 MyLists.Add(list);
                 listFavouriteSong.ItemsSource = MyLists;
@@ -75,7 +84,6 @@ namespace _1712384_1712349_1712407
             var screen = new Microsoft.Win32.OpenFileDialog();
             if (screen.ShowDialog() == true)
             {
-                _lastIndex += 1;
                 var info = new FileInfo(screen.FileName);
                 //Thêm bài hát vào danh sách trên màn hình hiện tại
                 var song = new songs()
@@ -85,9 +93,9 @@ namespace _1712384_1712349_1712407
                     //Index = _lastIndex
                 };
 
-                ListSongs.Add(song);
+                BigestList.Add(song);
                 operationListBox.ItemsSource = null;
-                operationListBox.ItemsSource = ListSongs;
+                operationListBox.ItemsSource = BigestList;
                 StaticDiskBorder.Visibility = Visibility.Collapsed;
                 RotateDiskBorder.Visibility = Visibility.Visible;
             }
@@ -109,12 +117,12 @@ namespace _1712384_1712349_1712407
             while (operationListBox.SelectedItems.Count > 0)
             {
                 var index = operationListBox.Items.IndexOf(operationListBox.SelectedItem);
-                if (ListSongs[index].isPlaying == true)//xóa một bài nhạc đang chơi
+                if (BigestList[index].isPlaying == true)//xóa một bài nhạc đang chơi
                 {
                     player.DeletePlayer();
                     _isPlaying = false;//cập nhật lại trạng thái chơi nhạc
                 }
-                ListSongs.RemoveAt(index);
+                BigestList.RemoveAt(index);
             }
         }
 
@@ -125,9 +133,9 @@ namespace _1712384_1712349_1712407
         }
 
         bool _isPlaying = false;//Trạng thái chơi nhạc(có đang chơi hay không)
-
+        int _lastIndex = -1;//
         /// <summary>
-        /// Sau khi chọn 1 bài hát trong list để nghe->nhấn Play button
+        /// Sau khi chọn 1 bài hát trong Bigest list để nghe->nhấn Play button
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -137,17 +145,14 @@ namespace _1712384_1712349_1712407
             {
                 player.DeletePlayer();
                 player = null;
+                if (_lastIndex > -1)
+                    BigestList[_lastIndex].isPlaying = false;
             }
             int indexSong = operationListBox.SelectedIndex;
+            _lastIndex = indexSong;//lưu lại 
             if (indexSong>=0)
             {
-                ListSongs[indexSong].isPlaying = true;
-                PlaySelectedIndex(indexSong);
-                if (player.isEnded())//đã chơi hết bài nhạc
-                {
-                    _isPlaying = false;
-                    ListSongs[indexSong].isPlaying = false;
-                }
+                PlayASong(indexSong);
             }
             else
             {
@@ -155,6 +160,16 @@ namespace _1712384_1712349_1712407
             }
         }
 
+        private void PlayASong(int indexSong)
+        {
+            BigestList[indexSong].isPlaying = true;
+            PlaySelectedIndex(indexSong);
+            if (player.isEnded())//đã chơi hết bài nhạc
+            {
+                _isPlaying = false;
+                BigestList[indexSong].isPlaying = false;
+            }
+        }
         /// <summary>
         /// Thực hiện play bài hát được chọn trong list 
         /// </summary>
@@ -162,7 +177,7 @@ namespace _1712384_1712349_1712407
         private void PlaySelectedIndex(int indexSong)
         {
             _isPlaying = true;
-            var filename = ListSongs[indexSong].pathfile;
+            var filename = BigestList[indexSong].pathfile;
             //Tạo một lượt chơi nhạc
             player = new Player()
             {
@@ -174,13 +189,164 @@ namespace _1712384_1712349_1712407
             player.timer.Tick += timer_Tick;
         }
 
-
+        /// <summary>
+        /// Mở hộp thoại PlaylistDialog để user chọn list nhạc để play
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PlayListButton_Click(object sender, RoutedEventArgs e)
         {
-            var screen = new PlayListDialog();
-            if(screen.ShowDialog()==true)
+            var screen = new PlayListDialog(MyLists);
+            if (screen.ShowDialog() == true)
             {
-                MessageBox.Show("xin chao");
+                MessageBox.Show(screen.ListNameSelected);
+            }
+        }
+
+
+       
+        /// <summary>
+        /// Save lại những tên List hiện có
+        /// </summary>
+        private void saveLists()
+        {
+            const string filename = "Lists.txt";
+            var writer = new StreamWriter(filename);
+            var count = MyLists.Count;
+            //writer.WriteLine(count.ToString());
+            writer.WriteLine($"{count}");
+            for (int i=0;i<count;i++)
+            {
+                writer.WriteLine(MyLists[i].namelist);
+            }
+            writer.Close();
+        }
+
+        /// <summary>
+        /// Save lại những bài hát trong một list(có nhiều list)
+        /// </summary>
+        private void saveSongsOfList()
+        {
+            var count = MyLists.Count;
+            for(int i=0;i<count;i++)
+            {
+                var filename = MyLists[i].namelist+".txt";
+                var writer = new StreamWriter(filename);
+                var countSongs = MyLists[i].songsList.Count;
+                writer.WriteLine($"{countSongs}");
+                for (int j=0;j<countSongs;j++)
+                {
+                    writeSongToFile(MyLists[i].songsList[j], writer);
+                }
+                writer.Close();
+            }
+        }
+
+        /// <summary>
+        /// Lưu tất cả bài hát
+        /// </summary>
+        private void saveAllSongs()
+        {
+            var count = BigestList.Count;
+            const string filename = "SuperList.txt";
+            var writer = new StreamWriter(filename);
+            writer.WriteLine($"{count}");
+            writer.WriteLine($"{_lastIndex}");
+            for (int i = 0; i < count; i++)
+            {
+                writeSongToFile(BigestList[i], writer);
+            }
+            writer.Close();
+        }
+
+        /// <summary>
+        /// Load lên tất cả bài hát có trong file filename lưu vào List
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="List"></param>
+        private void loadAllSongs(string filename,BindingList<songs>List)
+        {
+            var reader = new StreamReader(filename);
+            var count = int.Parse(reader.ReadLine());
+            _lastIndex = int.Parse(reader.ReadLine());
+            for(int i=0;i<count;i++)
+            {
+                var tokens = reader.ReadLine().Split(new string[] { "@" }, StringSplitOptions.None);
+                var song = new songs();
+                song.pathfile = new FileInfo(tokens[0]);
+                song.singer = tokens[1];
+                song.duration = tokens[2];
+                if (int.Parse(tokens[3]) == 1)
+                    song.isPlaying = true;
+                else
+                    song.isPlaying = false;
+                List.Add(song);
+            }
+            reader.Close();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="song"></param>
+        /// <param name="writer"></param>
+        private void writeSongToFile(songs song,StreamWriter writer)
+        {
+            var data = new StringBuilder();
+            data.Append(song.pathfile.ToString());
+            data.Append("@");
+            data.Append(song.singer);
+            data.Append("@");
+            data.Append(song.duration);
+            data.Append("@");
+            if (song.isPlaying)
+            {
+                data.Append("1");
+            }
+            else
+                data.Append("0");
+            writer.WriteLine(data);
+        }
+        /// <summary>
+        /// Lưu lại những thứ cần thiết trước khi tắt chương trình
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            saveLists();
+            saveAllSongs();
+            //saveSongsOfList();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //var filename = MyLists[0].namelist + ".txt";
+            //MessageBox.Show(filename);
+            //saveLists();
+            //saveSongsOfList();
+        }
+
+        /// <summary>
+        /// Sự kiện này xảy ra sau khi sự kiện Loaded. Hiện Message Box hỏi người dùng 
+        /// có muốn play lại bài hát đang chơi dở dang ko
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_ContentRendered(object sender, EventArgs e)
+        {
+            if (_lastIndex > 0)
+            {
+                //System.Threading.Thread.Sleep(1000);
+                if (MessageBox.Show("Do you want to close this window?",
+               "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    PlayASong(_lastIndex);
+                }
+                else
+                {
+                    BigestList[_lastIndex].isPlaying = false;
+                }
             }
         }
     }

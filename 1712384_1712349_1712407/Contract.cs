@@ -74,9 +74,7 @@ namespace _1712384_1712349_1712407
     {
         public FileInfo pathfile { get; set; }
         public string singer { get; set; }
-
         public string duration { get; set; }
-        public int Index { get; set; }
         public bool isPlaying { get; set; }
     }
 
@@ -84,5 +82,7 @@ namespace _1712384_1712349_1712407
     {
         public string namelist { get; set; }
         public List<songs> songsList { get; set; }
+
+        public int countOfList { get; set; }//số lượng bài hát trong một list
     }
 }
