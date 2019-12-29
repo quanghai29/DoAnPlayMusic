@@ -81,7 +81,7 @@ namespace _1712384_1712349_1712407
     public class mylist
     {
         public string namelist { get; set; }
-        public List<songs> songsList { get; set; }
+        public List<songs> songsList{ get; set; }
 
         public int countOfList { get; set; }//số lượng bài hát trong một list
     }

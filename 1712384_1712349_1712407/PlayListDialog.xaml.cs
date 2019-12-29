@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,6 +50,8 @@ namespace _1712384_1712349_1712407
             var index = playListListView.SelectedIndex;
             if(index>-1)
             {
+                var fn = Directory.GetCurrentDirectory() + "\\" + copy_myLists[index].namelist+".txt";
+                File.Delete(fn);
                 copy_myLists.RemoveAt(index);
             }
             else

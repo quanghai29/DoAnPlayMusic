@@ -43,7 +43,7 @@
                 <RowDefinition Height="3.5*"/>
                 <RowDefinition Height="1.5*"/>
             </Grid.RowDefinitions>
-            
+            <Label Name="ListNameLable" Content="Bài hát" Width="auto" Height="25" Padding="12,1" Margin="2,25,15,0"/>
             <!--CÁC CHỨC NĂNG CỦA VIEW LIST BÀI HÁT-->
             <StackPanel Grid.Row="0"  Orientation="Horizontal" HorizontalAlignment="Right" >
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="New Song"
@@ -69,6 +69,7 @@
                                 <ContextMenu>
                                     <MenuItem Name="editOperationItem" Header="Edit" />
                                     <MenuItem Name="deleteOperationItem" Header="Delete" Click="deleteOperationItem_Click"/>
+                                    <MenuItem Name="addToList" Header="Add to list" Click="addToList_Click"/>
                                 </ContextMenu>
                             </StackPanel.ContextMenu>
                             

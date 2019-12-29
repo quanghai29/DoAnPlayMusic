@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.ComponentModel;
 using Microsoft.Build.Tasks;
+using System.Diagnostics;
 
 namespace _1712384_1712349_1712407
 {
@@ -38,11 +39,28 @@ namespace _1712384_1712349_1712407
         {
             //Nạp MyLists 
             var filename = "SuperList.txt";
+            var Listsfile = "Lists.txt";
             if (File.Exists(Directory.GetCurrentDirectory() + $"\\{filename}"))
             {
                 loadAllSongs(filename, BigestList);
                 operationListBox.ItemsSource = BigestList;
-               
+            }
+            if(File.Exists(Directory.GetCurrentDirectory() + $"\\{Listsfile}"))
+            {
+                loadLists();
+            }
+            var countLists = MyLists.Count;
+            if(countLists>0)
+            {
+                for(int i=0;i<countLists;i++)
+                {
+                    var fn = MyLists[i].namelist + ".txt";
+                    MyLists[i].songsList = new List<songs>();
+                    BindingList<songs> songs = new BindingList<songs>(MyLists[i].songsList);
+                    if (songs!=null)
+                        loadAllSongs(fn,songs);
+                    MyLists[i].countOfList = MyLists[i].songsList.Count;
+                }
             }
         }
 
@@ -60,8 +78,8 @@ namespace _1712384_1712349_1712407
                 var list = new mylist()
                 {
                     namelist = listName,
-                    countOfList = 0
-                    //songsList =MiniLists.ToList()//để tạm
+                    countOfList = 0,
+                    songsList = new List<songs>()
                 };
                 MyLists.Add(list);
                 listFavouriteSong.ItemsSource = MyLists;
@@ -103,10 +121,10 @@ namespace _1712384_1712349_1712407
 
         private void deleteOperationItem_Click(object sender, RoutedEventArgs e)
         {
-            deleteSongs();
+            deleteSongs(BigestList);
         }
 
-        private void deleteSongs()
+        private void deleteSongs(BindingList<songs> BindingListName)
         {
             if (operationListBox.SelectedIndex == -1)
             {
@@ -117,19 +135,20 @@ namespace _1712384_1712349_1712407
             while (operationListBox.SelectedItems.Count > 0)
             {
                 var index = operationListBox.Items.IndexOf(operationListBox.SelectedItem);
-                if (BigestList[index].isPlaying == true)//xóa một bài nhạc đang chơi
+                if (BindingListName[index].isPlaying == true)//xóa một bài nhạc đang chơi
                 {
                     player.DeletePlayer();
                     _isPlaying = false;//cập nhật lại trạng thái chơi nhạc
+                    _lastIndex = -1;
                 }
-                BigestList.RemoveAt(index);
+                BindingListName.RemoveAt(index);
             }
         }
 
 
         private void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            deleteSongs();
+            deleteSongs(BigestList);
         }
 
         bool _isPlaying = false;//Trạng thái chơi nhạc(có đang chơi hay không)
@@ -222,6 +241,22 @@ namespace _1712384_1712349_1712407
             writer.Close();
         }
 
+        private void loadLists()
+        {
+            const string filename = "Lists.txt";
+            var reader = new StreamReader(filename);
+            var count = int.Parse(reader.ReadLine());
+            //Debug.WriteLine(count.ToString());
+            for (int i=0;i<count;i++)
+            {
+                var list = new mylist()
+                {
+                    namelist = reader.ReadLine(),
+                };
+                MyLists.Add(list);
+            }
+            reader.Close();
+        }
         /// <summary>
         /// Save lại những bài hát trong một list(có nhiều list)
         /// </summary>
@@ -268,7 +303,8 @@ namespace _1712384_1712349_1712407
         {
             var reader = new StreamReader(filename);
             var count = int.Parse(reader.ReadLine());
-            _lastIndex = int.Parse(reader.ReadLine());
+            if(filename=="SuperList.txt")
+                _lastIndex = int.Parse(reader.ReadLine());
             for(int i=0;i<count;i++)
             {
                 var tokens = reader.ReadLine().Split(new string[] { "@" }, StringSplitOptions.None);
@@ -307,6 +343,7 @@ namespace _1712384_1712349_1712407
                 data.Append("0");
             writer.WriteLine(data);
         }
+
         /// <summary>
         /// Lưu lại những thứ cần thiết trước khi tắt chương trình
         /// </summary>
@@ -316,7 +353,7 @@ namespace _1712384_1712349_1712407
         {
             saveLists();
             saveAllSongs();
-            //saveSongsOfList();
+            saveSongsOfList();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -335,7 +372,7 @@ namespace _1712384_1712349_1712407
         /// <param name="e"></param>
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            if (_lastIndex > 0)
+            if (_lastIndex >= 0)
             {
                 //System.Threading.Thread.Sleep(1000);
                 if (MessageBox.Show("Do you want to close this window?",
@@ -348,6 +385,59 @@ namespace _1712384_1712349_1712407
                     BigestList[_lastIndex].isPlaying = false;
                 }
             }
+        }
+
+        private void addToList_Click(object sender, RoutedEventArgs e)
+        {
+            string listName = inputDiaLog("input", true);
+            if (listName != null)
+            {
+               var check = checkListName(listName);
+                var index = operationListBox.SelectedIndex;
+               if (check>-1)
+                {
+                    MyLists[check].songsList.Add(BigestList[index]);
+                    MyLists[check].countOfList += 1;
+                }
+               else//tạo mới danh sách có tên== listName
+                {
+                    var newList = new mylist()
+                    {
+                        namelist = listName,
+                        songsList=new List<songs>(),
+                        countOfList=0
+                    };
+                    newList.songsList.Add(BigestList[index]);
+                    newList.countOfList += 1;
+
+                    MyLists.Add(newList);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Kiểm tra tên listName có trong các playlist ko
+        /// </summary>
+        /// <param name="listName">tên playlist cần kiểm tra</param>
+        /// <returns>
+        /// index của listName nếu nó có trong các playlist
+        /// ngược lại trả về -1
+        /// </returns>
+        private int checkListName(string listName)
+        {
+            for(int i=0;i<MyLists.Count; i++)
+            {
+                if(listName==MyLists[i].namelist)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        private void addSongToList(songs song,List<songs>listSongs)
+        {
+
         }
     }
 }
