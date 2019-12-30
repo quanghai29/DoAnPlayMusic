@@ -45,8 +45,6 @@ namespace _1712384_1712349_1712407
             if (File.Exists(Directory.GetCurrentDirectory() + $"\\{filename}"))
             {
                 loadAllSongs(filename, BigestList);
-                Convert = BigestList;
-                operationListBox.ItemsSource =Convert;
             }
             if(File.Exists(Directory.GetCurrentDirectory() + $"\\{Listsfile}"))
             {
@@ -64,7 +62,20 @@ namespace _1712384_1712349_1712407
                         loadAllSongs(fn,songs);
                     MyLists[i].countOfList = MyLists[i].songsList.Count;
                 }
+
             }
+
+            if (_isPlayingMiniList >= 0)
+            {
+                Convert = new BindingList<songs>(MyLists[_isPlayingMiniList].songsList);
+                ListNameLable.Content = MyLists[_isPlayingMiniList].namelist;
+            }
+            else
+            {
+                Convert = BigestList;
+            }
+
+            operationListBox.ItemsSource = Convert;
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -169,6 +180,7 @@ namespace _1712384_1712349_1712407
 
         bool _isPlaying = false;//Trạng thái chơi nhạc(có đang chơi hay không)
         int _lastIndex = -1;//
+        int  _isPlayingMiniList = -1;//đang nghe nhạc ở danh sách tổng
         /// <summary>
         /// Sau khi chọn 1 bài hát trong Bigest list để nghe->nhấn Play button
         /// </summary>
@@ -218,7 +230,6 @@ namespace _1712384_1712349_1712407
         private void PlaySelectedIndex(int indexSong)
         {
             _isPlaying = true;
-            //var filename = BigestList[indexSong].pathfile;
             var filename = Convert[indexSong].pathfile;
             //Tạo một lượt chơi nhạc
             player = new Player()
@@ -246,6 +257,7 @@ namespace _1712384_1712349_1712407
                 var indexSelected = screen.indexSelected;
                 if(listnameSelected!="")
                 {
+                    _isPlayingMiniList = indexSelected;//đang chơi bài nhạc thuộc List thứ indexSelected trong List<mylist>
                     ListNameLable.Content = listnameSelected;
                     BindingList<songs> listData = new BindingList<songs>(MyLists[indexSelected].songsList);
                     Convert = listData;
@@ -266,6 +278,7 @@ namespace _1712384_1712349_1712407
             var count = MyLists.Count;
             //writer.WriteLine(count.ToString());
             writer.WriteLine($"{count}");
+            writer.WriteLine($"{_isPlayingMiniList}");
             for (int i=0;i<count;i++)
             {
                 writer.WriteLine(MyLists[i].namelist);
@@ -278,7 +291,7 @@ namespace _1712384_1712349_1712407
             const string filename = "Lists.txt";
             var reader = new StreamReader(filename);
             var count = int.Parse(reader.ReadLine());
-            //Debug.WriteLine(count.ToString());
+            _isPlayingMiniList = int.Parse(reader.ReadLine());
             for (int i=0;i<count;i++)
             {
                 var list = new mylist()
@@ -395,6 +408,7 @@ namespace _1712384_1712349_1712407
         /// <param name="e"></param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            _isPlayingMiniList = -1;
             Convert = BigestList;
             ListNameLable.Content = "Bài hát";
             operationListBox.ItemsSource = Convert;
@@ -411,7 +425,7 @@ namespace _1712384_1712349_1712407
             if (_lastIndex >= 0)
             {
                 //System.Threading.Thread.Sleep(1000);
-                if (MessageBox.Show("Do you want to close this window?",
+                if (MessageBox.Show("Do you want to continue with last section",
                "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     PlayASong(_lastIndex);
