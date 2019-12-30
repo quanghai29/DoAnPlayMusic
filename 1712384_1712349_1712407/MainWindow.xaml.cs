@@ -32,7 +32,9 @@ namespace _1712384_1712349_1712407
             
         }
         Player player;
-        BindingList<songs> Convert = new BindingList<songs>();//
+        // Convert:Chức năng trung gian để chuyển đổi các playlist
+        //ánh xạ các playlist vào Listview để áp các hành động của user lên playlist được chọn
+        BindingList<songs> Convert = new BindingList<songs>();
         BindingList<mylist> MyLists = new BindingList<mylist>();//chứa các list
         BindingList<songs> BigestList = new BindingList<songs>();//chứa toàn bộ bài hát
         private void Window_Loaded(object sender, RoutedEventArgs e)
