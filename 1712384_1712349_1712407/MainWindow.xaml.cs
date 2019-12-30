@@ -119,11 +119,15 @@ namespace _1712384_1712349_1712407
                     //Index = _lastIndex
                 };
 
+                if (File.Exists(Directory.GetCurrentDirectory() + $"\\SuperList.txt")==false)
+                {
+                    Convert = BigestList;
+                    operationListBox.ItemsSource = Convert;
+                }
                 //BigestList.Add(song);
                 Convert.Add(song);
                 //operationListBox.ItemsSource = null;
                 //operationListBox.ItemsSource = BigestList;
-                //operationListBox.ItemsSource = Convert;
                 StaticDiskBorder.Visibility = Visibility.Collapsed;
                 RotateDiskBorder.Visibility = Visibility.Visible;
             }
