@@ -31,7 +31,7 @@
                          Background="#f7f7f7" Padding="12,1" BorderThickness="0"/>
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="Open Song" Name="openSongButton"
                          Background="#f7f7f7" Padding="12,1" BorderThickness="0" Click="OpenSongButton_Click"/>
-                <Button  Cursor="Hand"  Width="auto" Height="25" Content="Play all" Click="Button_Click"
+                <Button  Cursor="Hand"  Width="auto" Height="25" Content="All songs" Click="Button_Click"
                          Background="#f7f7f7" Padding="12,1" BorderThickness="0"/>
             </StackPanel>
         </Grid>

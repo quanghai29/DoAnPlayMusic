@@ -76,6 +76,7 @@ namespace _1712384_1712349_1712407
         public string singer { get; set; }
         public string duration { get; set; }
         public bool isPlaying { get; set; }
+        //public int index { get; set; }//index của bài hát trong danh sách tổng
     }
 
     public class mylist

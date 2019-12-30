@@ -32,7 +32,7 @@ namespace _1712384_1712349_1712407
             
         }
         Player player;
-        BindingList<songs> MiniLists = new BindingList<songs>();//Thể hiện các bài hát trong 1 list
+        BindingList<songs> Convert = new BindingList<songs>();//
         BindingList<mylist> MyLists = new BindingList<mylist>();//chứa các list
         BindingList<songs> BigestList = new BindingList<songs>();//chứa toàn bộ bài hát
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -43,7 +43,8 @@ namespace _1712384_1712349_1712407
             if (File.Exists(Directory.GetCurrentDirectory() + $"\\{filename}"))
             {
                 loadAllSongs(filename, BigestList);
-                operationListBox.ItemsSource = BigestList;
+                Convert = BigestList;
+                operationListBox.ItemsSource =Convert;
             }
             if(File.Exists(Directory.GetCurrentDirectory() + $"\\{Listsfile}"))
             {
@@ -97,6 +98,11 @@ namespace _1712384_1712349_1712407
             return null;
         }
 
+        /// <summary>
+        /// Thêm một bài hát vào danh sách tổng
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenSongButton_Click(object sender, RoutedEventArgs e)
         {
             var screen = new Microsoft.Win32.OpenFileDialog();
@@ -111,9 +117,11 @@ namespace _1712384_1712349_1712407
                     //Index = _lastIndex
                 };
 
-                BigestList.Add(song);
-                operationListBox.ItemsSource = null;
-                operationListBox.ItemsSource = BigestList;
+                //BigestList.Add(song);
+                Convert.Add(song);
+                //operationListBox.ItemsSource = null;
+                //operationListBox.ItemsSource = BigestList;
+                //operationListBox.ItemsSource = Convert;
                 StaticDiskBorder.Visibility = Visibility.Collapsed;
                 RotateDiskBorder.Visibility = Visibility.Visible;
             }
@@ -121,7 +129,8 @@ namespace _1712384_1712349_1712407
 
         private void deleteOperationItem_Click(object sender, RoutedEventArgs e)
         {
-            deleteSongs(BigestList);
+            //deleteSongs(BigestList);
+            deleteSongs(Convert);
         }
 
         private void deleteSongs(BindingList<songs> BindingListName)
@@ -148,7 +157,8 @@ namespace _1712384_1712349_1712407
 
         private void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            deleteSongs(BigestList);
+            //deleteSongs(BigestList);
+            deleteSongs(Convert);
         }
 
         bool _isPlaying = false;//Trạng thái chơi nhạc(có đang chơi hay không)
@@ -165,7 +175,11 @@ namespace _1712384_1712349_1712407
                 player.DeletePlayer();
                 player = null;
                 if (_lastIndex > -1)
-                    BigestList[_lastIndex].isPlaying = false;
+                {
+                    //BigestList[_lastIndex].isPlaying = false;
+                    Convert[_lastIndex].isPlaying = false;
+                }
+                   
             }
             int indexSong = operationListBox.SelectedIndex;
             _lastIndex = indexSong;//lưu lại 
@@ -181,12 +195,14 @@ namespace _1712384_1712349_1712407
 
         private void PlayASong(int indexSong)
         {
-            BigestList[indexSong].isPlaying = true;
+            //BigestList[indexSong].isPlaying = true;
+            Convert[indexSong].isPlaying = true;
             PlaySelectedIndex(indexSong);
             if (player.isEnded())//đã chơi hết bài nhạc
             {
                 _isPlaying = false;
-                BigestList[indexSong].isPlaying = false;
+                //BigestList[indexSong].isPlaying = false;
+                Convert[indexSong].isPlaying = false;
             }
         }
         /// <summary>
@@ -196,7 +212,8 @@ namespace _1712384_1712349_1712407
         private void PlaySelectedIndex(int indexSong)
         {
             _isPlaying = true;
-            var filename = BigestList[indexSong].pathfile;
+            //var filename = BigestList[indexSong].pathfile;
+            var filename = Convert[indexSong].pathfile;
             //Tạo một lượt chơi nhạc
             player = new Player()
             {
@@ -218,7 +235,16 @@ namespace _1712384_1712349_1712407
             var screen = new PlayListDialog(MyLists);
             if (screen.ShowDialog() == true)
             {
-                MessageBox.Show(screen.ListNameSelected);
+                //MessageBox.Show(screen.ListNameSelected);
+                var listnameSelected= screen.ListNameSelected;
+                var indexSelected = screen.indexSelected;
+                if(listnameSelected!="")
+                {
+                    ListNameLable.Content = listnameSelected;
+                    BindingList<songs> listData = new BindingList<songs>(MyLists[indexSelected].songsList);
+                    Convert = listData;
+                    operationListBox.ItemsSource = Convert;
+                }
             }
         }
 
@@ -278,7 +304,7 @@ namespace _1712384_1712349_1712407
         }
 
         /// <summary>
-        /// Lưu tất cả bài hát
+        /// Lưu tất cả bài hát có trong danh sách tổng
         /// </summary>
         private void saveAllSongs()
         {
@@ -356,12 +382,16 @@ namespace _1712384_1712349_1712407
             saveSongsOfList();
         }
 
+        /// <summary>
+        /// Button All songs trên màn hình
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //var filename = MyLists[0].namelist + ".txt";
-            //MessageBox.Show(filename);
-            //saveLists();
-            //saveSongsOfList();
+            Convert = BigestList;
+            ListNameLable.Content = "Bài hát";
+            operationListBox.ItemsSource = Convert;
         }
 
         /// <summary>
@@ -382,7 +412,8 @@ namespace _1712384_1712349_1712407
                 }
                 else
                 {
-                    BigestList[_lastIndex].isPlaying = false;
+                    //BigestList[_lastIndex].isPlaying = false;
+                    Convert[_lastIndex].isPlaying = false;
                 }
             }
         }
@@ -435,9 +466,5 @@ namespace _1712384_1712349_1712407
             return -1;
         }
 
-        private void addSongToList(songs song,List<songs>listSongs)
-        {
-
-        }
     }
 }

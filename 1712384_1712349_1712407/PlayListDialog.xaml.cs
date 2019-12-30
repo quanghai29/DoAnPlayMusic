@@ -22,6 +22,7 @@ namespace _1712384_1712349_1712407
     public partial class PlayListDialog : Window
     {
         public string ListNameSelected = "";
+        public int indexSelected = -1;
         private BindingList<mylist> copy_myLists = new BindingList<mylist>();
         public PlayListDialog(BindingList<mylist> myLists)
         {
@@ -36,6 +37,7 @@ namespace _1712384_1712349_1712407
             if(index>-1)
             {
                 ListNameSelected = copy_myLists[index].namelist;
+                indexSelected = index;
                 this.DialogResult = true;
                 this.Close();
             }
