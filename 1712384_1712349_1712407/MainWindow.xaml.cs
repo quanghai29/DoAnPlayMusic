@@ -25,13 +25,16 @@ namespace _1712384_1712349_1712407
     /// </summary>
     public partial class MainWindow : Window
     {
+        bool isPlayAll = false;
         
         public MainWindow()
         {
             InitializeComponent();
-            
+            //if (isPlayAll == true)
+            //    player.sound.MediaEnded += player_MediaEnded;
         }
         Player player;
+       
         // Convert:Chức năng trung gian để chuyển đổi các playlist
         //ánh xạ các playlist vào Listview để áp các hành động của user lên playlist được chọn
         BindingList<songs> Convert = new BindingList<songs>();
@@ -161,10 +164,14 @@ namespace _1712384_1712349_1712407
             while (operationListBox.SelectedItems.Count > 0)
             {
                 var index = operationListBox.Items.IndexOf(operationListBox.SelectedItem);
-                if (BindingListName[index].isPlaying == true)//xóa một bài nhạc đang chơi
+                if (BindingListName[index].isPlaying == true)//xóa một bài nhạc đang chơi(đang chơi dang dở, được lưu lại)
                 {
-                    player.DeletePlayer();
-                    _isPlaying = false;//cập nhật lại trạng thái chơi nhạc
+                    if (_isPlaying)//đang có bài hát được chơi
+                    {
+                        player.DeletePlayer();
+                        _isPlaying = false;//cập nhật lại trạng thái chơi nhạc
+                    }
+                   
                     _lastIndex = -1;
                 }
                 BindingListName.RemoveAt(index);
@@ -179,7 +186,7 @@ namespace _1712384_1712349_1712407
         }
 
         bool _isPlaying = false;//Trạng thái chơi nhạc(có đang chơi hay không)
-        int _lastIndex = -1;//
+        int _lastIndex = -1;//lưu lại index(trong listview) của bài hát vừa mới play xong 
         int  _isPlayingMiniList = -1;//đang nghe nhạc ở danh sách tổng
         /// <summary>
         /// Sau khi chọn 1 bài hát trong Bigest list để nghe->nhấn Play button
@@ -188,18 +195,18 @@ namespace _1712384_1712349_1712407
         /// <param name="e"></param>
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            if(_isPlaying)
+            int indexSong = operationListBox.SelectedIndex;
+            if (_isPlaying && indexSong>=0)
             {
                 player.DeletePlayer();
                 player = null;
                 if (_lastIndex > -1)
                 {
-                    //BigestList[_lastIndex].isPlaying = false;
                     Convert[_lastIndex].isPlaying = false;
                 }
                    
             }
-            int indexSong = operationListBox.SelectedIndex;
+           
             _lastIndex = indexSong;//lưu lại 
             if (indexSong>=0)
             {
@@ -219,7 +226,6 @@ namespace _1712384_1712349_1712407
             if (player.isEnded())//đã chơi hết bài nhạc
             {
                 _isPlaying = false;
-                //BigestList[indexSong].isPlaying = false;
                 Convert[indexSong].isPlaying = false;
             }
         }
@@ -234,8 +240,9 @@ namespace _1712384_1712349_1712407
             //Tạo một lượt chơi nhạc
             player = new Player()
             {
-                pathfile = filename
+                pathfile = filename,
             };
+            player.pathfile = filename;
             player.init();
             player.listening();
             //Tính thời gian
@@ -432,7 +439,6 @@ namespace _1712384_1712349_1712407
                 }
                 else
                 {
-                    //BigestList[_lastIndex].isPlaying = false;
                     Convert[_lastIndex].isPlaying = false;
                 }
             }
@@ -486,5 +492,35 @@ namespace _1712384_1712349_1712407
             return -1;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PlayAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            _lastIndex = 0;
+            if(_isPlaying)
+            {
+                player.DeletePlayer();
+            }
+           
+                PlayASong(_lastIndex);
+                player.sound.MediaEnded += player_MediaEnded;
+           
+        }
+
+        private void player_MediaEnded(object sender, EventArgs e)
+        {
+            if (_lastIndex == (operationListBox.Items.Count - 1))
+            {
+                return;
+            }
+            _isPlaying = false;
+            Convert[_lastIndex].isPlaying = false;
+            _lastIndex++;
+            PlayASong(_lastIndex);
+            player.sound.MediaEnded += player_MediaEnded;
+        }
     }
 }
