@@ -18,6 +18,7 @@ namespace _1712384_1712349_1712407
         public void DeletePlayer()
         {
             sound.Stop();
+            timer.Stop();
             timer = null;
         }
         public void init()

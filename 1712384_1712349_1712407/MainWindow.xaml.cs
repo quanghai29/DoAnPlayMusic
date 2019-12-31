@@ -41,8 +41,8 @@ namespace _1712384_1712349_1712407
         BindingList<mylist> MyLists = new BindingList<mylist>();//chứa các list
         BindingList<songs> BigestList = new BindingList<songs>();//chứa toàn bộ bài hát
 
-        bool stop = false;
         int countRepeat = 0; // số lần lặp
+        bool stop = false;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //Nạp MyLists 
@@ -86,7 +86,7 @@ namespace _1712384_1712349_1712407
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            Title= player.showTitle();
+                Title = player.showTitle();
         }
 
         private void NewPlaylistButton_Click(object sender, RoutedEventArgs e)
@@ -198,6 +198,7 @@ namespace _1712384_1712349_1712407
         /// <param name="e"></param>
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
+
             var screen = new CountRepeat();
             if (screen.ShowDialog() == true)
             {
@@ -639,6 +640,18 @@ namespace _1712384_1712349_1712407
 
             PlayASong(_lastIndex);
             player.sound.MediaEnded += player_MediaEndedRandom;
+        }
+
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isPlaying && _lastIndex >= 0)
+            {
+                player.DeletePlayer();
+                player = null;
+                Convert[_lastIndex].isPlaying = false;
+                _isPlaying = false;
+                _lastIndex = -1;
+            }          
         }
     }
 }
