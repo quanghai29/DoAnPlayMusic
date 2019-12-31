@@ -41,7 +41,7 @@ namespace _1712384_1712349_1712407
         BindingList<mylist> MyLists = new BindingList<mylist>();//chứa các list
         BindingList<songs> BigestList = new BindingList<songs>();//chứa toàn bộ bài hát
 
-        Boolean stop = false;
+        bool stop = false;
         int countRepeat = 0; // số lần lặp
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -205,55 +205,42 @@ namespace _1712384_1712349_1712407
             }
 
             int indexSong = operationListBox.SelectedIndex;
-            if (countRepeat == 0)
-            {               
-                if (_isPlaying && indexSong >= 0)
-                {
-                    player.DeletePlayer();
-                    player = null;
-                    if (_lastIndex > -1)
-                    {
-                        Convert[_lastIndex].isPlaying = false;
-                    }
-                }
-            }
-            else
+            if (_isPlaying && indexSong >= 0)
             {
-                do
+                player.DeletePlayer();
+                player = null;
+                if (_lastIndex > -1)
                 {
-                    if (_isPlaying && indexSong >= 0)
-                    {
-                        player.DeletePlayer();
-                        player = null;
-                        if (_lastIndex > -1)
-                        {
-                            Convert[_lastIndex].isPlaying = false;
-                        }
-                    }
-                } while (!stop);
-            }
+                    Convert[_lastIndex].isPlaying = false;
+                }
 
-            //int indexSong = operationListBox.SelectedIndex;
-            //if (_isPlaying && indexSong>=0)
-            //{
-            //    player.DeletePlayer();
-            //    player = null;
-            //    if (_lastIndex > -1)
-            //    {
-            //        Convert[_lastIndex].isPlaying = false;
-            //    }
-                   
-            //}
-           
+            }
             _lastIndex = indexSong;//lưu lại 
-            if (indexSong>=0)
+            if (indexSong >= 0)
             {
                 PlayASong(indexSong);
             }
             else
             {
                 MessageBox.Show("No file selected!");
+
             }
+            player.sound.MediaEnded += player_MediaEnded_PlayOne;
+        }
+
+        private void player_MediaEnded_PlayOne(object sender, EventArgs e)
+        {
+
+            if (countRepeat == 0)
+                return;
+            if (countRepeat == 1)
+            {
+                _isPlaying = false;
+                Convert[_lastIndex].isPlaying = false;
+                PlayASong(_lastIndex);
+                player.sound.MediaEnded += player_MediaEnded_PlayOne;
+            }
+
         }
 
         private void PlayASong(int indexSong)
