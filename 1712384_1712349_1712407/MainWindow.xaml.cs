@@ -25,7 +25,7 @@ namespace _1712384_1712349_1712407
     /// </summary>
     public partial class MainWindow : Window
     {
-        bool isPlayAll = false;
+        //bool isPlayAll = false;
         
         public MainWindow()
         {
@@ -145,8 +145,6 @@ namespace _1712384_1712349_1712407
                 Convert.Add(song);
                 //operationListBox.ItemsSource = null;
                 //operationListBox.ItemsSource = BigestList;
-                StaticDiskBorder.Visibility = Visibility.Collapsed;
-                RotateDiskBorder.Visibility = Visibility.Visible;
             }
         }
 
@@ -198,33 +196,32 @@ namespace _1712384_1712349_1712407
         /// <param name="e"></param>
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-
-            var screen = new CountRepeat();
-            if (screen.ShowDialog() == true)
-            {
-                countRepeat = screen.countRepeat;
-            }
-
             int indexSong = operationListBox.SelectedIndex;
-            if (_isPlaying && indexSong >= 0)
+            if(indexSong>=0)
             {
-                player.DeletePlayer();
-                player = null;
-                if (_lastIndex > -1)
+                var screen = new CountRepeat();
+                if (screen.ShowDialog() == true)
                 {
-                    Convert[_lastIndex].isPlaying = false;
+                    countRepeat = screen.countRepeat;
                 }
 
-            }
-            _lastIndex = indexSong;//lưu lại 
-            if (indexSong >= 0)
-            {
+                if (_isPlaying && indexSong >= 0)
+                {
+                    player.DeletePlayer();
+                    player = null;
+                    if (_lastIndex > -1)
+                    {
+                        Convert[_lastIndex].isPlaying = false;
+                    }
+                }
+
+                _lastIndex = indexSong;//lưu lại 
                 PlayASong(indexSong);
             }
             else
             {
                 MessageBox.Show("No file selected!");
-
+                return;
             }
             player.sound.MediaEnded += player_MediaEnded_PlayOne;
         }
@@ -271,6 +268,8 @@ namespace _1712384_1712349_1712407
             player.pathfile = filename;
             player.init();
             player.listening();
+            StaticDiskBorder.Visibility = Visibility.Collapsed;
+            RotateDiskBorder.Visibility = Visibility.Visible;
             //Tính thời gian
             player.timer.Tick += timer_Tick;
         }
@@ -651,6 +650,8 @@ namespace _1712384_1712349_1712407
                 Convert[_lastIndex].isPlaying = false;
                 _isPlaying = false;
                 _lastIndex = -1;
+                StaticDiskBorder.Visibility = Visibility.Visible;
+                RotateDiskBorder.Visibility = Visibility.Visible;
             }          
         }
     }
