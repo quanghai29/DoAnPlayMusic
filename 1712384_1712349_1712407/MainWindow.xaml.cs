@@ -40,6 +40,9 @@ namespace _1712384_1712349_1712407
         BindingList<songs> Convert = new BindingList<songs>();
         BindingList<mylist> MyLists = new BindingList<mylist>();//chứa các list
         BindingList<songs> BigestList = new BindingList<songs>();//chứa toàn bộ bài hát
+
+        Boolean stop = false;
+        int countRepeat = 0; // số lần lặp
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //Nạp MyLists 
@@ -195,17 +198,52 @@ namespace _1712384_1712349_1712407
         /// <param name="e"></param>
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            int indexSong = operationListBox.SelectedIndex;
-            if (_isPlaying && indexSong>=0)
+            var screen = new CountRepeat();
+            if (screen.ShowDialog() == true)
             {
-                player.DeletePlayer();
-                player = null;
-                if (_lastIndex > -1)
-                {
-                    Convert[_lastIndex].isPlaying = false;
-                }
-                   
+                countRepeat = screen.countRepeat;
             }
+
+            int indexSong = operationListBox.SelectedIndex;
+            if (countRepeat == 0)
+            {               
+                if (_isPlaying && indexSong >= 0)
+                {
+                    player.DeletePlayer();
+                    player = null;
+                    if (_lastIndex > -1)
+                    {
+                        Convert[_lastIndex].isPlaying = false;
+                    }
+                }
+            }
+            else
+            {
+                do
+                {
+                    if (_isPlaying && indexSong >= 0)
+                    {
+                        player.DeletePlayer();
+                        player = null;
+                        if (_lastIndex > -1)
+                        {
+                            Convert[_lastIndex].isPlaying = false;
+                        }
+                    }
+                } while (!stop);
+            }
+
+            //int indexSong = operationListBox.SelectedIndex;
+            //if (_isPlaying && indexSong>=0)
+            //{
+            //    player.DeletePlayer();
+            //    player = null;
+            //    if (_lastIndex > -1)
+            //    {
+            //        Convert[_lastIndex].isPlaying = false;
+            //    }
+                   
+            //}
            
             _lastIndex = indexSong;//lưu lại 
             if (indexSong>=0)
@@ -492,6 +530,8 @@ namespace _1712384_1712349_1712407
             return -1;
         }
 
+        
+
         /// <summary>
         /// 
         /// </summary>
@@ -499,14 +539,20 @@ namespace _1712384_1712349_1712407
         /// <param name="e"></param>
         private void PlayAllButton_Click(object sender, RoutedEventArgs e)
         {
+            var screen = new CountRepeat();
+            if(screen.ShowDialog() == true)
+            {
+                countRepeat = screen.countRepeat;
+            }
+
             _lastIndex = 0;
             if(_isPlaying)
             {
                 player.DeletePlayer();
             }
            
-                PlayASong(_lastIndex);
-                player.sound.MediaEnded += player_MediaEnded;
+            PlayASong(_lastIndex);
+            player.sound.MediaEnded += player_MediaEnded;
            
         }
 
@@ -514,13 +560,26 @@ namespace _1712384_1712349_1712407
         {
             if (_lastIndex == (operationListBox.Items.Count - 1))
             {
-                return;
+                if(countRepeat == 0)
+                    return;
+                if(countRepeat == 1)
+                {
+                    _lastIndex = 0;
+                    _isPlaying = false;
+                    Convert[_lastIndex].isPlaying = false;
+                    PlayASong(_lastIndex);
+                    player.sound.MediaEnded += player_MediaEnded;
+                }
             }
-            _isPlaying = false;
-            Convert[_lastIndex].isPlaying = false;
-            _lastIndex++;
-            PlayASong(_lastIndex);
-            player.sound.MediaEnded += player_MediaEnded;
+            else
+            {
+                _isPlaying = false;
+                Convert[_lastIndex].isPlaying = false;
+                _lastIndex++;
+                PlayASong(_lastIndex);
+                player.sound.MediaEnded += player_MediaEnded;
+            }
+            
         }
 
         List<int> Indexes = new List<int>();
@@ -532,13 +591,17 @@ namespace _1712384_1712349_1712407
         /// <param name="e"></param>
         private void PlayRandomButton_Click(object sender, RoutedEventArgs e)
         {
+            var screen = new CountRepeat();
+            if (screen.ShowDialog() == true)
+            {
+                countRepeat = screen.countRepeat;
+            }
+
             Indexes.Clear();
             for (int i = 0; i < operationListBox.Items.Count; i++)
             {
                 Indexes.Add(i);
-                Debug.Write(Indexes[i] + " ");
             }
-            Debug.WriteLine("");
 
             Random r = new Random();
             _lastIndex = Indexes[r.Next(0, Indexes.Count)];
@@ -556,12 +619,27 @@ namespace _1712384_1712349_1712407
 
         private void player_MediaEndedRandom(object sender, EventArgs e)
         {
-            Debug.WriteLine(_lastIndex);
-            Debug.WriteLine(operationListBox.Items.Count);
-
             if (Indexes.Count == 0)
             {
-                return;
+                if (countRepeat == 0)
+                    return;
+                if (countRepeat == 1)
+                {
+                    Indexes.Clear();
+                    for (int i = 0; i < operationListBox.Items.Count; i++)
+                    {
+                        Indexes.Add(i);
+                    }
+
+                    Random r1 = new Random();
+                    _lastIndex = Indexes[r1.Next(0, Indexes.Count)];
+                    Indexes.Remove(_lastIndex);
+
+                    _isPlaying = false;
+                    Convert[_lastIndex].isPlaying = false;
+                    PlayASong(_lastIndex);
+                    player.sound.MediaEnded += player_MediaEnded;
+                }
             }
 
             _isPlaying = false;
