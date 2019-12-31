@@ -58,6 +58,9 @@
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="Play All" Click="PlayAllButton_Click"
                          Background="#292426" Padding="12,1" Margin="2,25,15,0" Foreground="White" 
                          FontWeight="Bold" FontStyle="Oblique" />
+                <Button  Cursor="Hand"  Width="auto" Height="25" Content="Play random" Click="PlayRandomButton_Click"
+                         Background="#292426" Padding="12,1" Margin="2,25,15,0" Foreground="White" 
+                         FontWeight="Bold" FontStyle="Oblique" />
             </StackPanel>
             
             <!--List các bài hát-->

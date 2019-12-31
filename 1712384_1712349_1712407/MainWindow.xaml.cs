@@ -522,5 +522,58 @@ namespace _1712384_1712349_1712407
             PlayASong(_lastIndex);
             player.sound.MediaEnded += player_MediaEnded;
         }
+
+        List<int> Indexes = new List<int>();
+
+        /// <summary>
+        ///  play ngẫu nhiên
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PlayRandomButton_Click(object sender, RoutedEventArgs e)
+        {
+            Indexes.Clear();
+            for (int i = 0; i < operationListBox.Items.Count; i++)
+            {
+                Indexes.Add(i);
+                Debug.Write(Indexes[i] + " ");
+            }
+            Debug.WriteLine("");
+
+            Random r = new Random();
+            _lastIndex = Indexes[r.Next(0, Indexes.Count)];
+            Indexes.Remove(_lastIndex);
+
+            if (_isPlaying)
+            {
+                player.DeletePlayer();
+            }
+
+            PlayASong(_lastIndex);
+            player.sound.MediaEnded += player_MediaEndedRandom;
+
+        }
+
+        private void player_MediaEndedRandom(object sender, EventArgs e)
+        {
+            Debug.WriteLine(_lastIndex);
+            Debug.WriteLine(operationListBox.Items.Count);
+
+            if (Indexes.Count == 0)
+            {
+                return;
+            }
+
+            _isPlaying = false;
+            Convert[_lastIndex].isPlaying = false;
+
+            Random r = new Random();
+            _lastIndex = Indexes[r.Next(0, Indexes.Count)];
+            Indexes.Remove(_lastIndex);
+  
+
+            PlayASong(_lastIndex);
+            player.sound.MediaEnded += player_MediaEndedRandom;
+        }
     }
 }
