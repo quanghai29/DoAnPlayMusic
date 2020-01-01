@@ -84,9 +84,24 @@ namespace _1712384_1712349_1712407
             operationListBox.ItemsSource = Convert;
         }
 
+        int secTotal = 0;
         private void timer_Tick(object sender, EventArgs e)
         {
-                Title = player.showTitle();
+            Title = player.showTitle();
+            if (secTotal == 0)
+            {
+                var duration = player.sound.NaturalDuration;
+                if (duration.HasTimeSpan)
+                {
+                    var min = int.Parse(duration.TimeSpan.ToString(@"mm"));
+                    var sec = int.Parse(duration.TimeSpan.ToString(@"ss"));
+                    secTotal = min * 60 + sec;
+                }
+            }
+            else
+            {
+                musicProgressBar.Value += (double)100 / secTotal;
+            }
         }
 
         private void NewPlaylistButton_Click(object sender, RoutedEventArgs e)
@@ -243,7 +258,9 @@ namespace _1712384_1712349_1712407
 
         private void PlayASong(int indexSong)
         {
-            //BigestList[indexSong].isPlaying = true;
+            secTotal = 0;
+            musicProgressBar.Value = 0;
+            songNameTextblock.Text= System.IO.Path.GetFileNameWithoutExtension(Convert[indexSong].pathfile.Name); 
             Convert[indexSong].isPlaying = true;
             PlaySelectedIndex(indexSong);
             if (player.isEnded())//đã chơi hết bài nhạc

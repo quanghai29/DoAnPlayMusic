@@ -43,6 +43,7 @@ namespace _1712384_1712349_1712407
 
             var currentPos = sound.Position.ToString(@"mm\:ss");
             var duration = showDuration();
+
             Title = String.Format($"{currentPos} / {duration} - {shortname}");
             return Title;
         }
