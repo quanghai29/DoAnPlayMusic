@@ -43,19 +43,24 @@ namespace _1712384_1712349_1712407
             timer.Start();
         }
 
-        public string showTitle()
+        public string showPlayTime()
         {
             var Title = "";
-            var filename = pathfile.Name;
-            var shortname = System.IO.Path.GetFileNameWithoutExtension(filename);
+            
 
             var currentPos = sound.Position.ToString(@"mm\:ss");
             var duration = showDuration();
 
-            Title = String.Format($"{currentPos} / {duration} - {shortname}");
+            Title = String.Format($"{currentPos} : {duration}");
             return Title;
         }
 
+        public string getFileName()
+        {
+            var filename = pathfile.Name;
+            string shortname = String.Format($"{System.IO.Path.GetFileNameWithoutExtension(filename)}");
+            return shortname;
+        }
         public string showDuration()
         {
             if (sound.NaturalDuration.HasTimeSpan == false)

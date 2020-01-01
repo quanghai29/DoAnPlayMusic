@@ -139,7 +139,9 @@
     <Resource Include="Images\playlist.png" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
+    <Resource Include="Images\icon.png" />
+    <Resource Include="Images\play.png" />
+    <Resource Include="Images\video-pause-button.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

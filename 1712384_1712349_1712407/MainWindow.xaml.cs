@@ -90,7 +90,7 @@ namespace _1712384_1712349_1712407
         int secTotal = 0;
         private void timer_Tick(object sender, EventArgs e)
         {
-            Title = player.showTitle();
+            lblProgressStatus.Text = player.showPlayTime();
             if (secTotal == 0)
             {
                 var duration = player.sound.NaturalDuration;
@@ -234,6 +234,9 @@ namespace _1712384_1712349_1712407
                 }
 
                 _lastIndex = indexSong;//lưu lại 
+               
+                PlayButton.Visibility = Visibility.Collapsed;
+                PauseButton.Visibility = Visibility.Visible;
                 PlayASong(indexSong);
             }
             else
@@ -242,13 +245,40 @@ namespace _1712384_1712349_1712407
                 return;
             }
             player.sound.MediaEnded += player_MediaEnded_PlayOne;
+           
         }
 
+        private void PauseButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isPlaying && _lastIndex >= 0)
+            {
+                player.DeletePlayer();
+                player = null;
+                Convert[_lastIndex].isPlaying = false;
+                _isPlaying = false;
+                _lastIndex = -1;
+                songNameTextblock.Visibility = Visibility.Collapsed;
+                PauseButton.Visibility = Visibility.Collapsed;
+                PlayButton.Visibility = Visibility.Visible;
+                StaticDiskBorder.Visibility = Visibility.Visible;
+                RotateDiskBorder.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
         private void player_MediaEnded_PlayOne(object sender, EventArgs e)
         {
 
             if (countRepeat == 0)
+            {
+                StaticDiskBorder.Visibility = Visibility.Visible;
+                RotateDiskBorder.Visibility = Visibility.Collapsed;
                 return;
+            }
+                
             if (countRepeat == 1)
             {
                 _isPlaying = false;
@@ -268,7 +298,13 @@ namespace _1712384_1712349_1712407
             }
             secTotal = 0;
             musicProgressBar.Value = 0;
-            songNameTextblock.Text= System.IO.Path.GetFileNameWithoutExtension(Convert[indexSong].pathfile.Name); 
+
+            PlayButton.Visibility = Visibility.Collapsed;
+            PauseButton.Visibility = Visibility.Visible;
+            songNameTextblock.Visibility = Visibility.Visible;
+            songNameTextblock.Content= System.IO.Path.GetFileNameWithoutExtension(Convert[indexSong].pathfile.Name); 
+            
+
             Convert[indexSong].isPlaying = true;
             PlaySelectedIndex(indexSong);
             if (player.isEnded())//đã chơi hết bài nhạc
@@ -293,6 +329,8 @@ namespace _1712384_1712349_1712407
             player.pathfile = filename;
             player.init();
             player.listening();
+            songNameTextblock.Visibility = Visibility.Visible;
+            songNameTextblock.Content = player.getFileName();
             StaticDiskBorder.Visibility = Visibility.Collapsed;
             RotateDiskBorder.Visibility = Visibility.Visible;
             //Tính thời gian
@@ -574,7 +612,12 @@ namespace _1712384_1712349_1712407
             if (_lastIndex == (operationListBox.Items.Count - 1))
             {
                 if(countRepeat == 0)
+                {
+                    StaticDiskBorder.Visibility = Visibility.Visible;
+                    RotateDiskBorder.Visibility = Visibility.Collapsed;
                     return;
+                }
+                    
                 if(countRepeat == 1)
                 {
                     _lastIndex = 0;
@@ -635,7 +678,12 @@ namespace _1712384_1712349_1712407
             if (Indexes.Count == 0)
             {
                 if (countRepeat == 0)
+                {
+                    StaticDiskBorder.Visibility = Visibility.Visible;
+                    RotateDiskBorder.Visibility = Visibility.Collapsed;
                     return;
+                }
+                    
                 if (countRepeat == 1)
                 {
                     Indexes.Clear();
@@ -664,22 +712,13 @@ namespace _1712384_1712349_1712407
   
 
             PlayASong(_lastIndex);
+
+            
+
             player.sound.MediaEnded += player_MediaEndedRandom;
         }
 
-        private void StopButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (_isPlaying && _lastIndex >= 0)
-            {
-                player.DeletePlayer();
-                player = null;
-                Convert[_lastIndex].isPlaying = false;
-                _isPlaying = false;
-                _lastIndex = -1;
-                StaticDiskBorder.Visibility = Visibility.Visible;
-                RotateDiskBorder.Visibility = Visibility.Visible;
-            }          
-        }
+       
 
         private void editOperationItem_Click(object sender, RoutedEventArgs e)
         {
