@@ -248,27 +248,36 @@ namespace _1712384_1712349_1712407
            
         }
 
-        private void PauseButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (_isPlaying && _lastIndex >= 0)
-            {
-                player.DeletePlayer();
-                player = null;
-                Convert[_lastIndex].isPlaying = false;
-                _isPlaying = false;
-                _lastIndex = -1;
-                songNameTextblock.Visibility = Visibility.Collapsed;
-                PauseButton.Visibility = Visibility.Collapsed;
-                PlayButton.Visibility = Visibility.Visible;
-                StaticDiskBorder.Visibility = Visibility.Visible;
-                RotateDiskBorder.Visibility = Visibility.Collapsed;
-            }
-        }
+        //private void PauseButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    //if (_isPlaying && _lastIndex >= 0)
+        //    //{
+        //    //    player.DeletePlayer();
+        //    //    player = null;
+        //    //    Convert[_lastIndex].isPlaying = false;
+        //    //    _isPlaying = false;
+        //    //    _lastIndex = -1;
+        //    //    songNameTextblock.Visibility = Visibility.Collapsed;
+        //    //    PauseButton.Visibility = Visibility.Collapsed;
+        //    //    PlayButton.Visibility = Visibility.Visible;
+        //    //    StaticDiskBorder.Visibility = Visibility.Visible;
+        //    //    RotateDiskBorder.Visibility = Visibility.Collapsed;
+        //    //}
+        //    if (_isPlaying)
+        //    {
+        //        player.sound.Pause();
+        //        StaticDiskBorder.Visibility = Visibility.Visible;
+        //        RotateDiskBorder.Visibility = Visibility.Visible;
+        //    }
+        //    else
+        //    {
+        //        player.sound.Play();
+        //        StaticDiskBorder.Visibility = Visibility.Collapsed;
+        //        RotateDiskBorder.Visibility = Visibility.Visible;
+        //    }
+        //    _isPlaying = !_isPlaying;
+        //}
 
-        private void StopButton_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
         private void player_MediaEnded_PlayOne(object sender, EventArgs e)
         {
 
@@ -739,6 +748,15 @@ namespace _1712384_1712349_1712407
                     PlayASong(_lastIndex-1);
                     _lastIndex -= 1;//cập nhật lại _lastIndex
                 }
+                //if (_lastIndex == 0)
+                //{
+                //    player.DeletePlayer();
+                //    player = null;
+                //    Convert[_lastIndex].isPlaying = false;
+                //    _isPlaying = false;
+                //    _lastIndex = -1;
+                //    return;
+                //}
             }
 
             //chuyển sang bài kế
@@ -753,6 +771,15 @@ namespace _1712384_1712349_1712407
                     PlayASong(_lastIndex + 1);
                     _lastIndex += 1;//cập nhật lại _lastIndex
                 }
+                //if(_lastIndex==count-1)
+                //{
+                //    player.DeletePlayer();
+                //    player = null;
+                //    Convert[_lastIndex].isPlaying = false;
+                //    _isPlaying = false;
+                //    _lastIndex = -1;
+                //    return;
+                //}
             }
 
             //play
@@ -775,14 +802,46 @@ namespace _1712384_1712349_1712407
                 player.sound.Pause();
                 StaticDiskBorder.Visibility = Visibility.Visible;
                 RotateDiskBorder.Visibility = Visibility.Visible;
+                PauseButton.Visibility = Visibility.Collapsed;
+                PlayButton.Visibility = Visibility.Visible;
             }
             else
             {
-                player.sound.Play();
-                StaticDiskBorder.Visibility = Visibility.Collapsed;
-                RotateDiskBorder.Visibility = Visibility.Visible;
+                if (_lastIndex > -1)
+                {
+                    player.sound.Play();
+                    StaticDiskBorder.Visibility = Visibility.Collapsed;
+                    RotateDiskBorder.Visibility = Visibility.Visible;
+                    PauseButton.Visibility = Visibility.Visible;
+                    PlayButton.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    return;
+                }
             }
             _isPlaying = !_isPlaying;
+        }
+
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isPlaying && _lastIndex >= 0)
+            {
+                player.DeletePlayer();
+                player = null;
+                Convert[_lastIndex].isPlaying = false;
+                _isPlaying = false;
+                _lastIndex = -1;
+                StaticDiskBorder.Visibility = Visibility.Visible;
+                RotateDiskBorder.Visibility = Visibility.Visible;
+                PauseButton.Visibility = Visibility.Collapsed;
+                PlayButton.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void listFavouriteSong_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

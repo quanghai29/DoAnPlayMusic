@@ -48,6 +48,9 @@
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="Add Song" Name="openSongButton" Click="OpenSongButton_Click"
                          Background="#292426" Padding="12,1" Margin="2,25,15,0" Foreground="White" 
                          FontWeight="Bold" FontStyle="Oblique" />
+                <Button  Cursor="Hand"  Width="auto" Height="25" Content="Play" Click="PlayButton_Click"
+                         Background="#292426" Padding="12,1" Margin="2,25,15,0" Foreground="White" 
+                         FontWeight="Bold" FontStyle="Oblique" />
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="Play All" Click="PlayAllButton_Click"
                          Background="#292426" Padding="12,1" Margin="2,25,15,0" Foreground="White" 
                          FontWeight="Bold" FontStyle="Oblique" />
@@ -83,7 +86,7 @@
             </ListBox>
             <StackPanel Grid.Row="2">
                 <Label Content="Your Favorite List" Width="auto" FontWeight="DemiBold" FontSize="18" FontStretch="Expanded" FontStyle="Italic" Foreground="PaleVioletRed"/>
-                <ListBox Name="listFavouriteSong" Margin="0,1,0,0" BorderThickness="0,2,2,0" BorderBrush="Black" Height="150">
+                <ListBox Name="listFavouriteSong" Margin="0,1,0,0" BorderThickness="0,2,2,0" BorderBrush="Black" Height="150" SelectionChanged="listFavouriteSong_SelectionChanged">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
@@ -180,10 +183,10 @@
                 </StatusBar.ItemsPanel>
                 <StackPanel HorizontalAlignment="Center">
                     <ToolBar>
-                        <Button x:Name="PlayButton"  Click="PlayButton_Click">
+                        <Button x:Name="PlayButton" Click="pauseButton_Click" Visibility="Collapsed">
                             <Image Source="Images/play.png" />
                         </Button>
-                        <Button x:Name="PauseButton" Click="PauseButton_Click" Visibility="Collapsed">
+                        <Button x:Name="PauseButton" Click="pauseButton_Click" Visibility="Visible">
                             <Image Source="Images/video-pause-button.png" />
                         </Button>
                         <Button x:Name="StopButton" Click="StopButton_Click">
