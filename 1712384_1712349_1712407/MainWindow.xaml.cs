@@ -258,6 +258,11 @@ namespace _1712384_1712349_1712407
 
         private void PlayASong(int indexSong)
         {
+            if (player != null)
+            {//kill đi đối tượng player đang tồn tại
+                player.DeletePlayer();
+                player = null;
+            }
             secTotal = 0;
             musicProgressBar.Value = 0;
             songNameTextblock.Text= System.IO.Path.GetFileNameWithoutExtension(Convert[indexSong].pathfile.Name); 
