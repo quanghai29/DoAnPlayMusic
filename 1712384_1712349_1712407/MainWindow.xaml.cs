@@ -87,6 +87,7 @@ namespace _1712384_1712349_1712407
             operationListBox.ItemsSource = Convert;
         }
 
+        bool isPause = false;
         int secTotal = 0;
         private void timer_Tick(object sender, EventArgs e)
         {
@@ -101,7 +102,7 @@ namespace _1712384_1712349_1712407
                     secTotal = min * 60 + sec;
                 }
             }
-            else
+            if(secTotal>0 && isPause==false)
             {
                 musicProgressBar.Value += (double)100 / secTotal;
             }
@@ -299,27 +300,30 @@ namespace _1712384_1712349_1712407
         }
 
         private void PlayASong(int indexSong)
-        {
-            if (player != null)
-            {//kill đi đối tượng player đang tồn tại
-                player.DeletePlayer();
-                player = null;
-            }
-            secTotal = 0;
-            musicProgressBar.Value = 0;
-
-            PlayButton.Visibility = Visibility.Collapsed;
-            PauseButton.Visibility = Visibility.Visible;
-            songNameTextblock.Visibility = Visibility.Visible;
-            songNameTextblock.Content= System.IO.Path.GetFileNameWithoutExtension(Convert[indexSong].pathfile.Name); 
-            
-
-            Convert[indexSong].isPlaying = true;
-            PlaySelectedIndex(indexSong);
-            if (player.isEnded())//đã chơi hết bài nhạc
+        { 
+            if(indexSong>-1 && indexSong<operationListBox.Items.Count)
             {
-                _isPlaying = false;
-                Convert[indexSong].isPlaying = false;
+                if (player != null)
+                {//kill đi đối tượng player đang tồn tại
+                    player.DeletePlayer();
+                    player = null;
+                }
+                secTotal = 0;
+                musicProgressBar.Value = 0;
+
+                PlayButton.Visibility = Visibility.Collapsed;
+                PauseButton.Visibility = Visibility.Visible;
+                songNameTextblock.Visibility = Visibility.Visible;
+                songNameTextblock.Content = System.IO.Path.GetFileNameWithoutExtension(Convert[indexSong].pathfile.Name);
+
+
+                Convert[indexSong].isPlaying = true;
+                PlaySelectedIndex(indexSong);
+                if (player.isEnded())//đã chơi hết bài nhạc
+                {
+                    _isPlaying = false;
+                    Convert[indexSong].isPlaying = false;
+                }
             }
         }
         /// <summary>
@@ -782,10 +786,11 @@ namespace _1712384_1712349_1712407
                 //}
             }
 
-            //play
-           
+            //if (e.KeyCode == Keys.Space)
+            //{
+            //    e as RoutedEventArgs;
 
-            //pause
+            //}
            
         }
 
@@ -800,6 +805,7 @@ namespace _1712384_1712349_1712407
             if (_isPlaying)
             {
                 player.sound.Pause();
+                isPause = true;
                 StaticDiskBorder.Visibility = Visibility.Visible;
                 RotateDiskBorder.Visibility = Visibility.Visible;
                 PauseButton.Visibility = Visibility.Collapsed;
@@ -810,6 +816,7 @@ namespace _1712384_1712349_1712407
                 if (_lastIndex > -1)
                 {
                     player.sound.Play();
+                    isPause = false;
                     StaticDiskBorder.Visibility = Visibility.Collapsed;
                     RotateDiskBorder.Visibility = Visibility.Visible;
                     PauseButton.Visibility = Visibility.Visible;
