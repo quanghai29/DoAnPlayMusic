@@ -17,6 +17,8 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using Microsoft.Build.Tasks;
 using System.Diagnostics;
+using Gma.System.MouseKeyHook;
+using System.Windows.Forms;
 
 namespace _1712384_1712349_1712407
 {
@@ -25,13 +27,14 @@ namespace _1712384_1712349_1712407
     /// </summary>
     public partial class MainWindow : Window
     {
-        //bool isPlayAll = false;
-        
+        private IKeyboardMouseEvents _hook;
         public MainWindow()
         {
             InitializeComponent();
-            //if (isPlayAll == true)
-            //    player.sound.MediaEnded += player_MediaEnded;
+
+            //Đăng kí sự kiện hook 
+            _hook = Hook.GlobalEvents();
+            _hook.KeyUp += keyUp_hook;
         }
         Player player;
        
@@ -235,7 +238,7 @@ namespace _1712384_1712349_1712407
             }
             else
             {
-                MessageBox.Show("No file selected!");
+                System.Windows.MessageBox.Show("No file selected!");
                 return;
             }
             player.sound.MediaEnded += player_MediaEnded_PlayOne;
@@ -453,6 +456,7 @@ namespace _1712384_1712349_1712407
             saveLists();
             saveAllSongs();
             saveSongsOfList();
+            DisposeHook();
         }
 
         /// <summary>
@@ -479,7 +483,7 @@ namespace _1712384_1712349_1712407
             if (_lastIndex >= 0)
             {
                 //System.Threading.Thread.Sleep(1000);
-                if (MessageBox.Show("Do you want to continue with last section",
+                if (System.Windows.MessageBox.Show("Do you want to continue with last section",
                "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     PlayASong(_lastIndex);
@@ -679,7 +683,67 @@ namespace _1712384_1712349_1712407
 
         private void editOperationItem_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("SuperTop Sorry!This function is not be installed");
+            System.Windows.MessageBox.Show("SuperTop Sorry!This function is not be installed");
+        }
+
+
+        private void keyUp_hook(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            //quay lại bài trước
+            if(e.KeyCode==Keys.Left)
+            {
+                if(_isPlaying==true && _lastIndex>0)
+                {
+                    player.DeletePlayer();
+                    player = null;
+                    Convert[_lastIndex].isPlaying = false;
+                    PlayASong(_lastIndex-1);
+                    _lastIndex -= 1;//cập nhật lại _lastIndex
+                }
+            }
+
+            //chuyển sang bài kế
+            if (e.KeyCode == Keys.Right)
+            {
+                var count = operationListBox.Items.Count;
+                if (_isPlaying == true && _lastIndex < count-1)
+                {
+                    player.DeletePlayer();
+                    player = null;
+                    Convert[_lastIndex].isPlaying = false;
+                    PlayASong(_lastIndex + 1);
+                    _lastIndex += 1;//cập nhật lại _lastIndex
+                }
+            }
+
+            //play
+           
+
+            //pause
+           
+        }
+
+        private void DisposeHook()
+        {
+            _hook.KeyUp -= keyUp_hook;
+            _hook.Dispose();
+        }
+
+        private void pauseButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isPlaying)
+            {
+                player.sound.Pause();
+                StaticDiskBorder.Visibility = Visibility.Visible;
+                RotateDiskBorder.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                player.sound.Play();
+                StaticDiskBorder.Visibility = Visibility.Collapsed;
+                RotateDiskBorder.Visibility = Visibility.Visible;
+            }
+            _isPlaying = !_isPlaying;
         }
     }
 }
