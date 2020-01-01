@@ -245,7 +245,12 @@ namespace _1712384_1712349_1712407
         {
 
             if (countRepeat == 0)
+            {
+                StaticDiskBorder.Visibility = Visibility.Visible;
+                RotateDiskBorder.Visibility = Visibility.Collapsed;
                 return;
+            }
+                
             if (countRepeat == 1)
             {
                 _isPlaying = false;
@@ -570,7 +575,12 @@ namespace _1712384_1712349_1712407
             if (_lastIndex == (operationListBox.Items.Count - 1))
             {
                 if(countRepeat == 0)
+                {
+                    StaticDiskBorder.Visibility = Visibility.Visible;
+                    RotateDiskBorder.Visibility = Visibility.Collapsed;
                     return;
+                }
+                    
                 if(countRepeat == 1)
                 {
                     _lastIndex = 0;
@@ -631,7 +641,12 @@ namespace _1712384_1712349_1712407
             if (Indexes.Count == 0)
             {
                 if (countRepeat == 0)
+                {
+                    StaticDiskBorder.Visibility = Visibility.Visible;
+                    RotateDiskBorder.Visibility = Visibility.Collapsed;
                     return;
+                }
+                    
                 if (countRepeat == 1)
                 {
                     Indexes.Clear();
@@ -660,6 +675,9 @@ namespace _1712384_1712349_1712407
   
 
             PlayASong(_lastIndex);
+
+            
+
             player.sound.MediaEnded += player_MediaEndedRandom;
         }
 
@@ -673,7 +691,7 @@ namespace _1712384_1712349_1712407
                 _isPlaying = false;
                 _lastIndex = -1;
                 StaticDiskBorder.Visibility = Visibility.Visible;
-                RotateDiskBorder.Visibility = Visibility.Visible;
+                RotateDiskBorder.Visibility = Visibility.Collapsed;
             }          
         }
 
