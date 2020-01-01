@@ -71,7 +71,7 @@
                         <StackPanel>
                             <StackPanel.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Name="editOperationItem" Header="Edit" />
+                                    <MenuItem Name="editOperationItem" Header="Edit" Click="editOperationItem_Click"/>
                                     <MenuItem Name="deleteOperationItem" Header="Delete" Click="deleteOperationItem_Click"/>
                                     <MenuItem Name="addToList" Header="Add to list" Click="addToList_Click"/>
                                 </ContextMenu>

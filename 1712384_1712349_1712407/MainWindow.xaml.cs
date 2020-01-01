@@ -676,5 +676,10 @@ namespace _1712384_1712349_1712407
                 RotateDiskBorder.Visibility = Visibility.Visible;
             }          
         }
+
+        private void editOperationItem_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("SuperTop Sorry!This function is not be installed");
+        }
     }
 }
