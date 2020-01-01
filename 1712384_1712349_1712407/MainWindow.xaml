@@ -9,10 +9,6 @@
         WindowState="Maximized"
         Title="MainWindow" Height="450" Width="800"
     Loaded="Window_Loaded" Closing="Window_Closing" ContentRendered="Window_ContentRendered">
-    <Window.Background>
-        <ImageBrush ImageSource="Images/background_music.jpg" Stretch="UniformToFill" Opacity="0.4">
-        </ImageBrush>
-    </Window.Background>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.5*" />
@@ -29,15 +25,14 @@
                          Name="newPlaylistButton" Click="NewPlaylistButton_Click" Background="#f7f7f7" Padding="12,1" BorderThickness="0"/>
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="Open PlayList" Click="PlayListButton_Click"
                          Background="#f7f7f7" Padding="12,1" BorderThickness="0"/>
-                <Button  Cursor="Hand"  Width="auto" Height="25" Content="Open Song" Name="openSongButton"
-                         Background="#f7f7f7" Padding="12,1" BorderThickness="0" Click="OpenSongButton_Click"/>
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="All songs" Click="Button_Click"
                          Background="#f7f7f7" Padding="12,1" BorderThickness="0"/>
+                
             </StackPanel>
         </Grid>
 
         <!--view danh sách các bài hát trong list hoặc do người dùng chọn-->
-        <Grid Grid.Row="1" Grid.Column="0" Background="White">
+        <Grid Grid.Row="1" Grid.Column="0" Background="White" Panel.ZIndex="100">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.5*"/>
                 <RowDefinition Height="3.5*"/>
@@ -50,12 +45,9 @@
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="Delete"
                          Background="#292426" Padding="12,1" Margin="2,25,15,0" Foreground="White" 
                          FontWeight="Bold" FontStyle="Oblique" Click="ButtonDelete_Click" />
-                <Button  Cursor="Hand"  Width="auto" Height="25" Content="Play" Click="PlayButton_Click"
+                <Button  Cursor="Hand"  Width="auto" Height="25" Content="Add Song" Name="openSongButton" Click="OpenSongButton_Click"
                          Background="#292426" Padding="12,1" Margin="2,25,15,0" Foreground="White" 
                          FontWeight="Bold" FontStyle="Oblique" />
-                <Button  Cursor="Hand"  Width="auto" Height="25" Content="Stop"
-                         Background="#292426" Padding="12,1" Margin="2,25,15,0" Foreground="White" 
-                         FontWeight="Bold" FontStyle="Oblique" Click="StopButton_Click"/>
                 <Button  Cursor="Hand"  Width="auto" Height="25" Content="Play All" Click="PlayAllButton_Click"
                          Background="#292426" Padding="12,1" Margin="2,25,15,0" Foreground="White" 
                          FontWeight="Bold" FontStyle="Oblique" />
@@ -120,9 +112,30 @@
        
 
 
-        <!--view để danh sách các playlist khi chương trình load lên-->
-        <Grid Grid.Row="1" Grid.Column="1" Background="White" Margin="0,0,0,5">
-
+        <!--view để đĩa quay-->
+        <Grid Grid.Row="1" Grid.Column="1" Background="White" Margin="0,0,0,5"  Panel.ZIndex="-10">
+            <Canvas>
+                <Label Content="HELLO" Canvas.Left="-50"  Name="songNameTextblock" FontWeight="Bold" 
+                   FontSize="20" FontStyle="Italic" Foreground="Blue" Margin="10,0,0,30" Visibility="Hidden"
+                 >
+                    <Label.Style>
+                        <Style TargetType="Label">
+                            <Style.Triggers>
+                                <EventTrigger RoutedEvent="Label.Loaded">
+                                    <EventTrigger.Actions>
+                                        <BeginStoryboard>
+                                            <Storyboard >
+                                                <DoubleAnimation  Storyboard.TargetProperty="(Canvas.Left)" RepeatBehavior="Forever" From="-900" To="900" Duration="0:0:10"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger.Actions>
+                                </EventTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Label.Style>
+                </Label>
+            </Canvas>
+            
             <Border x:Name="RotateDiskBorder"  CornerRadius="300" Width="450" Height="450" Visibility="Collapsed"
                     BorderThickness="2" BorderBrush="Black" RenderTransformOrigin="0.50,0.50">
                 <Border.Background>
@@ -157,8 +170,43 @@
         </Grid>
         <!--view chạy âm lượng play pause-->
         <Grid Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10,0,0">
-            <TextBlock Name="songNameTextblock" FontWeight="Bold" FontSize="25" FontStyle="Italic" Foreground="Blue" Margin="10,0,0,0"/>
-            <ProgressBar Name="musicProgressBar" Minimum="0" Maximum="100" Height="5" Margin="10,0,10,0"/>
+            <StatusBar Grid.Row="1">
+                <StatusBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </StatusBar.ItemsPanel>
+                <StackPanel HorizontalAlignment="Center">
+                    <ToolBar>
+                        <Button x:Name="PlayButton"  Click="PlayButton_Click">
+                            <Image Source="Images/play.png" />
+                        </Button>
+                        <Button x:Name="PauseButton" Click="PauseButton_Click" Visibility="Collapsed">
+                            <Image Source="Images/video-pause-button.png" />
+                        </Button>
+                        <Button x:Name="StopButton" Click="StopButton_Click">
+                            <Image Source="Images/icon.png" />
+                        </Button>
+                    </ToolBar>
+                </StackPanel>
+                <StatusBarItem Grid.Column="1">
+                    <TextBlock Name="lblProgressStatus">00:00:00</TextBlock>
+                </StatusBarItem>
+                <StatusBarItem Grid.Column="2" HorizontalContentAlignment="Stretch" Height="60">
+                    <Slider Name="musicProgressBar" Minimum="0" Maximum="100" />
+                </StatusBarItem>
+                <StatusBarItem Grid.Column="3">
+                    <ProgressBar Name="pbVolume" Width="50" Height="12" Maximum="1" Value="{Binding ElementName=mePlayer, Path=Volume}" />
+                </StatusBarItem>
+            </StatusBar>
+            <!--<ProgressBar Name="musicProgressBar" Minimum="0" Maximum="100" Height="5" Margin="10,0,10,0"/>-->
         </Grid>
     </Grid>
 </Window>
