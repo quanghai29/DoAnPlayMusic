@@ -254,6 +254,7 @@ namespace _1712384_1712349_1712407
                 Convert[_lastIndex].isPlaying = false;
                 _isPlaying = false;
                 _lastIndex = -1;
+                songNameTextblock.Visibility = Visibility.Collapsed;
                 PauseButton.Visibility = Visibility.Collapsed;
                 PlayButton.Visibility = Visibility.Visible;
                 StaticDiskBorder.Visibility = Visibility.Visible;
@@ -295,9 +296,10 @@ namespace _1712384_1712349_1712407
             secTotal = 0;
             musicProgressBar.Value = 0;
 
+            PlayButton.Visibility = Visibility.Collapsed;
+            PauseButton.Visibility = Visibility.Visible;
             songNameTextblock.Visibility = Visibility.Visible;
             songNameTextblock.Content= System.IO.Path.GetFileNameWithoutExtension(Convert[indexSong].pathfile.Name); 
-            
             
 
             Convert[indexSong].isPlaying = true;
@@ -718,7 +720,5 @@ namespace _1712384_1712349_1712407
         {
             MessageBox.Show("SuperTop Sorry!This function is not be installed");
         }
-
-       
     }
 }
