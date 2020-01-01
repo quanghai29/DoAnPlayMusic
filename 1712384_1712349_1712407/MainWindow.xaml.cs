@@ -742,6 +742,7 @@ namespace _1712384_1712349_1712407
         private void keyUp_hook(object sender, System.Windows.Forms.KeyEventArgs e)
         {
             //quay lại bài trước
+            //Phím mũi tên sang trái
             if(e.KeyCode==Keys.Left)
             {
                 if(_isPlaying==true && _lastIndex>0)
@@ -764,6 +765,7 @@ namespace _1712384_1712349_1712407
             }
 
             //chuyển sang bài kế
+            //Phím mũi tên sang phải
             if (e.KeyCode == Keys.Right)
             {
                 var count = operationListBox.Items.Count;
@@ -786,12 +788,12 @@ namespace _1712384_1712349_1712407
                 //}
             }
 
-            //if (e.KeyCode == Keys.Space)
-            //{
-            //    e as RoutedEventArgs;
+            //Phím mũi tên đi xuống
+            if (e.KeyCode==Keys.Down)
+            {
+                PauseEvent();
+            }
 
-            //}
-           
         }
 
         private void DisposeHook()
@@ -801,6 +803,11 @@ namespace _1712384_1712349_1712407
         }
 
         private void pauseButton_Click(object sender, RoutedEventArgs e)
+        {
+            PauseEvent();
+        }
+
+        private void PauseEvent()
         {
             if (_isPlaying)
             {
