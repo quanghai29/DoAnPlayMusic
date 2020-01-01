@@ -820,7 +820,7 @@ namespace _1712384_1712349_1712407
             }
             else
             {
-                if (_lastIndex > -1)
+                if (_lastIndex > -1 && player!=null)
                 {
                     player.sound.Play();
                     isPause = false;
